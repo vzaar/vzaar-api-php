@@ -1,0 +1,28 @@
+<!DOCTYPE html
+		PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title></title>
+	<meta name="author" content="Skitsanos"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://jquery-ui.googlecode.com/svn/tags/1.8rc1/ui/minified/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/ui-lightness/jquery-ui.css" type="text/css" media="screen"/>
+	<style type="text/css">
+		* {font-family: Arial, sans-serif;}
+		body {font-size: 11px;color: #333;}
+	</style>
+	<script type="text/javascript">
+		$(function() {
+			$.getJSON('http://vzaar.com/api/skitsanos/videos.json?callback=?', function (videos) {
+				for (var i = 0, l = videos.length; i < l; i++) {
+					var video = videos[i];
+					$('<tr><td><img src="' + video.thumbnail + '"/><br/><div class="ui-widget-header">' + video.title + '</div></td></tr>').appendTo('#videos');
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<table id="videos"></table>
+</body>
+</html>
