@@ -1,2 +1,0 @@
-Vzaar API PHP Client
-=====
