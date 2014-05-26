@@ -5,8 +5,8 @@
 require_once '../Vzaar.php';
 
 
-Vzaar::$token = 'u2nd3DVI71jQ7dTtz9mHA953XeIQeodmZvSE6AbTX8'; //
-Vzaar::$secret = 'skitsanos';
+Vzaar::$token = 'token'; //
+Vzaar::$secret = 'secret';
 
 $redirect_url='http://vzaarapi.vpn/tests/uploadvideoprocess.php';
 

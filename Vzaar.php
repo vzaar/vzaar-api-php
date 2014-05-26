@@ -117,6 +117,9 @@ class Vzaar
     {
         $_url = Vzaar::URL_LIVE;
 
+        $r = new HttpRequest($_url . 'api/' . $account . '.xml');
+        print_r($r->send());
+
         $req = new HttpRequest($_url . 'api/' . $account . '.json');
         $req->verbose = Vzaar::$enableHttpVerbose;
 
@@ -225,6 +228,36 @@ class Vzaar
         $arrObj = $xmlObj->getArray();
         $key = explode('/', $arrObj['PostResponse']['Key']);
         return $key[sizeOf($key) - 2];
+    }
+
+    /*
+     *
+     */
+    public static function uploadSubtitle($language, $videoId, $body)
+    {
+        $_url = Vzaar::URL_LIVE . "api/subtitle/upload.xml";
+
+        $req = Vzaar::setAuth($_url, 'POST');
+
+        $data = '<?xml version="1.0" encoding="UTF-8"?>
+                <vzaar-api>
+                    <subtitle>
+                        <language>' . $language . '</language>
+                        <video_id>' . $videoId . '</video_id>
+                        <body>' . $body . '</body>
+                    </subtitle>
+                </vzaar-api>';
+
+        $c = new HttpRequest($_url);
+        $c->verbose = Vzaar::$enableHttpVerbose;
+        $c->method = 'POST';
+
+        array_push($c->headers, $req->to_header());
+        array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
+        array_push($c->headers, 'Connection: close');
+        array_push($c->headers, 'Content-Type: application/xml');
+
+        return $c->send($data);
     }
 
     /**
@@ -546,7 +579,11 @@ class XMLToArray
 
         if ($isattribs && !$this->_showAttribs) {
             return;
-        } elseif ($isattribs) $this->_data['_Attributes_'][$this->_level][$name][] = $add; elseif (is_array($add) && is_array($update)) $update += $add; elseif (is_array($update)) return; elseif (is_array($add)) $update = $add; elseif ($add) $update .= $add;
+        } elseif ($isattribs) $this->_data['_Attributes_'][$this->_level][$name][] = $add;
+        elseif (is_array($add) && is_array($update)) $update += $add;
+        elseif (is_array($update)) return;
+        elseif (is_array($add)) $update = $add;
+        elseif ($add) $update .= $add;
     }
 
 }

@@ -6,7 +6,8 @@
 
 require_once 'VzaarException.php';
 
-class User {
+class User
+{
     var $version;
     var $authorName;
     var $authorId;
@@ -15,27 +16,29 @@ class User {
     var $createdAt;
     var $videoCount;
     var $playCount;
+    var $bandwidthThisMonth;
+    var $videosTotalSize;
 
-    static function fromJson($data) {
+    static function fromJson($data)
+    {
+        $jo = json_decode($data);
+        print_r($jo);
 
-	$jo = json_decode($data);
+        if ($jo == NULL) {
+            throw new VzaarException('Object not found');
+        } else {
+            $user = new User();
 
-	if($jo==NULL) {
-	    throw new VzaarException('Object not found');
-	}
-	else {
-	    $user = new User();
-
-	    $user->authorName = $jo->author_url;
-	    $user->playCount = $jo->play_count;
-	    $user->authorId = $jo->author_id;
-	    $user->authorUrl = $jo->author_url;
-	    $user->createdAt = $jo->created_at;
-	    $user->authorAccount = $jo->author_account;
-	    $user->videoCount = $jo->video_count;
-	    $user->version = $jo->version;
-	    return $user;
-	}
+            $user->authorName = $jo->author_url;
+            $user->playCount = $jo->play_count;
+            $user->authorId = $jo->author_id;
+            $user->authorUrl = $jo->author_url;
+            $user->createdAt = $jo->created_at;
+            $user->authorAccount = $jo->author_account;
+            $user->videoCount = $jo->video_count;
+            $user->version = $jo->version;
+            return $user;
+        }
     }
 
     /**
@@ -46,41 +49,45 @@ class User {
      * @param authorId the vzaar user id
      * @param authorUrl a link to the vzaar user summary page
      * @param authorAccount a number representing the users vzaar
-     * 		account. 1 represents a free account
+     *        account. 1 represents a free account
      * @param createdAt the date time the video was uploaded. Will be
-     * 		in UTC format
+     *        in UTC format
      * @param videoCount the number of active videos in the users
-     * 		account
+     *        account
      * @param playCount the number of times all the users videos
-     * 		have been played
+     *        have been played
      */
-    function __construct() {
+    function __construct()
+    {
     }
 
-    function __construct1($version, $authorName, $authorId, $authorUrl, $authorAccount, $createdAt, $videoCount, $playCount) {
-	$this->version = $version;
-	$this->authorName = $authorName;
-	$this->authorId = $authorId;
-	$this->authorUrl = $authorUrl;
-	$this->authorAccount = $authorAccount;
-	$this->createdAt = $createdAt;
-	$this->videoCount = $videoCount;
-	$this->playCount = $playCount;
+    function __construct1($version, $authorName, $authorId, $authorUrl, $authorAccount, $createdAt, $videoCount, $playCount)
+    {
+        $this->version = $version;
+        $this->authorName = $authorName;
+        $this->authorId = $authorId;
+        $this->authorUrl = $authorUrl;
+        $this->authorAccount = $authorAccount;
+        $this->createdAt = $createdAt;
+        $this->videoCount = $videoCount;
+        $this->playCount = $playCount;
     }
 
     /**
      * String representation of the user bean.
      */
-    public function toString() {
-	return
-	"version=" . $this->version .
-	    ", authorName=" . $this->authorName .
-	    ", authorId=" . $this->authorId .
-	    ", authorUrl=" . $this->authorUrl .
-	    ", authorAccount=" . $this->authorAccount .
-	    ", createdAt=" . $this->createdAt .
-	    ", videoCount=" . $this->videoCount .
-	    ", playCount=" . $this->playCount;
+    public function toString()
+    {
+        return
+            "version=" . $this->version .
+            ", authorName=" . $this->authorName .
+            ", authorId=" . $this->authorId .
+            ", authorUrl=" . $this->authorUrl .
+            ", authorAccount=" . $this->authorAccount .
+            ", createdAt=" . $this->createdAt .
+            ", videoCount=" . $this->videoCount .
+            ", playCount=" . $this->playCount;
     }
 }
+
 ?>

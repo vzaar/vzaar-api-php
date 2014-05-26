@@ -7,8 +7,8 @@ date_default_timezone_set("Europe/London");
 
 require_once '../Vzaar.php';
 
-Vzaar::$token = '960DUk4qz9mFijtPwahllzpHYWQzKSVJiIyUpQ82Ac'; //
-Vzaar::$secret = 'skitsanos';
+Vzaar::$token = 'token'; //
+Vzaar::$secret = 'secret';
 
 $uploadSignature=Vzaar::getUploadSignature();
 

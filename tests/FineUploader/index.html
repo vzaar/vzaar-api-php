@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>vzaar FineUploader Example</title>
+    <meta name="author" content="skitsanos">
+    <link href="fineuploader.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+    <script src="all.fineuploader-4.0.2.min.js"></script>
+    <script type="text/template" id="simple-previews-template">
+        <div class="qq-uploader-selector qq-uploader">
+            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span>Drop files here to upload</span>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>Upload a file</div>
+            </div>
+              <span class="qq-drop-processing-selector qq-drop-processing">
+                  <span>Processing dropped files...</span>
+                  <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+              </span>
+            <ul class="qq-upload-list-selector qq-upload-list">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale="true">
+                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <a class="qq-upload-cancel-selector btn-small btn-warning" href="#">Cancel</a>
+                    <a class="qq-upload-retry-selector btn-small btn-info" href="#">Retry</a>
+                    <a class="qq-upload-delete-selector btn-small btn-warning" href="#">Delete</a>
+                    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <a class="view-btn btn-small btn-info hide" target="_blank">View</a>
+                </li>
+            </ul>
+        </div>
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON('/signature.php', function(result){
+
+                $('#fineuploader-s3').fineUploaderS3({
+                    debug: true,
+
+                    request: {
+                        // REQUIRED: We are using a custom domain
+                        // for our S3 bucket, in this case.  You can
+                        // use any valid URL that points to your bucket.
+                        endpoint: result.bucket + '.s3.amazonaws.com',
+
+                        // REQUIRED: The AWS public key for the client-side user
+                        // we provisioned.
+                        accessKey: result.accesskeyid
+                    },
+
+                    template: "simple-previews-template",
+
+                    // REQUIRED: Path to our local server where requests
+                    // can be signed.
+                    signature: {
+                        endpoint: "fineuploader-signature.php"
+                    },
+
+                    // optional feature
+                    chunking: {
+                        enabled: true
+                    },
+
+                    // optional feature
+                    resume: {
+                        enabled: true
+                    },
+
+                    // optional feature
+                    validation: {
+                        itemLimit: 5,
+                        sizeLimit: 15000000
+                    },
+
+                    thumbnails: {
+                        placeholders: {
+                            notAvailablePath: "placeholders/not_available-generic.png",
+                            waitingPath: "placeholders/waiting-generic.png"
+                        }
+                    }
+                })
+                    // Enable the "view" link in the UI that allows the file to be downloaded/viewed
+                        .on('complete', function(event, id, name, response) {
+                            console.log(response);
+                            var $fileEl = $(this).fineUploaderS3("getItemByFileId", id),
+                                    $viewBtn = $fileEl.find(".view-btn");
+
+                            //if (response.success) {
+                                $viewBtn.show();
+                                $viewBtn.attr("href", response.tempLink);
+                            //}
+                        });
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+    <div id="fineuploader-s3"></div>
+</body>
+</html>

@@ -4,8 +4,8 @@
  */
 require_once '../Vzaar.php';
 
-Vzaar::$token = 'GETUGkPFNC84JlzXkOMSYQFTOCAixOIiroh7oUj3k'; //
-Vzaar::$secret = 'skitsanos';
+Vzaar::$token = 'token'; //
+Vzaar::$secret = 'secret';
 
 
 $guid='';

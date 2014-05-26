@@ -4,8 +4,8 @@
  */
 require_once '../Vzaar.php';
 
-Vzaar::$secret = 'sNqgt3jvICeQxmZlrqg8NrdvbrXwdccJydGygiS2q'; // sandbox.vzaa
-Vzaar::$token = 'skitsanos';
+Vzaar::$secret = 'secret'; 
+Vzaar::$token = 'token';
 
 if (isset($_GET['id'])) {
     $res = Vzaar::editVideo($_GET['id'], $_GET['title'], $_GET['description']);

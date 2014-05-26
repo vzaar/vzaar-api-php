@@ -24,8 +24,10 @@ require_once 'AccountType.php';
 /**
  * This API call returns the user's public details along with it's relevant metadata
  */
-Vzaar::$token = 'u2nd3DVI71jQ7dTtz9mHA953XeIQeodmZvSE6AbTX8'; //
-Vzaar::$secret = 'skitsanos';
+Vzaar::$token = 'token'; //
+Vzaar::$secret = 'secret';
+
+Vzaar::$enableHttpVerbose = true;
 
 date_default_timezone_set("Europe/London");
 
@@ -41,12 +43,16 @@ date_default_timezone_set("Europe/London");
 //var_dump(Vzaar::getVideoDetails(21791,true));
 //var_dump(Vzaar::getUploadSignature());
 
+//print_r(Vzaar::getUploadSignature('http://skitsanos.com'));
+
+print_r(Vzaar::uploadSubtitle('en', 5579750, 'some subtitle'));
+
 //print_r(Vzaar::getVideoDetails(632017, true));
 
 /**
  * OAuth API
  */
-print_r(Vzaar::whoAmI());
+//print_r(Vzaar::whoAmI());
 //var_dump(Vzaar::searchVideoList('skitsanos', true));
 //print_r(Vzaar::getVideoList('skitsanos', true, 2, 'skitsanos%20tv'));
 //print_r(Vzaar::getVideoDetails(324763, true)->html);
