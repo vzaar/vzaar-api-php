@@ -72,7 +72,7 @@ class HttpRequest {
                 break;
 
             case 'PUT':
-                curl_setopt($this->c, CURLOPT_PUT, true);
+                curl_setopt($this->c, CURLOPT_CUSTOMREQUEST, "PUT");
                 if ($data != null)
                     curl_setopt($this->c, CURLOPT_POSTFIELDS, $data);
                 break;
