@@ -355,21 +355,20 @@ class Vzaar
     {
         $_url = Vzaar::URL_LIVE . "api/videos/" . $id . ".xml";
 
-        $req = Vzaar::setAuth($_url, 'POST');
+        $req = Vzaar::setAuth($_url, 'PUT');
 
-        $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>put</_method><video><title>' . $title . '</title><description>' . $description . '</description>';
-        if ($private != '') $data .= '<private>' . $private . '</private>';
-        if ($seoUrl != '') $data .= '<seo_url>' . $seoUrl . '</seo_url>';
+        $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>post</_method><video><title>' . $title . '</title><description>' . $description . '</description>';
+        //if ($private != '') $data .= '<private>' . $private . '</private>';
+        //if ($seoUrl != '') $data .= '<seo_url>' . $seoUrl . '</seo_url>';
         $data .= '</video></vzaar-api>';
 
         $c = new HttpRequest($_url);
         $c->verbose = Vzaar::$enableHttpVerbose;
-        $c->method = 'POST';
-        array_push($c->headers, $req->to_header());
-        array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
-        array_push($c->headers, 'Connection: close');
+        $c->method = 'PUT';
         array_push($c->headers, 'Content-Type: application/xml');
-
+        array_push($c->headers, $req->to_header());
+        array_push($c->headers, 'Content-length: ' . strlen($data));
+        array_push($c->headers, 'Expect:');
         return $c->send($data);
     }
 
