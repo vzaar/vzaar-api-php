@@ -295,6 +295,67 @@ class Vzaar
     }
 
     /**
+     * Uploading a video from a url.
+     *
+     * @param string $url
+     * @param string $title the title for the video
+     * @param string $description the description for the video
+     * @param int|\Profile $profile the size for the video to be encoded, if not specified it will use the vzaar default
+     * @param int $bitrate the bitrate for the video to be encoded
+     * @param int $width the width for the video to be encoded
+     * @param int $replace_id an existing video id to be replaced with the new video
+     * @param boolean $transcoding if true forces vzaar to transcode the video, false will use the original source file (only for mp4 and flv files)
+     *
+     * @return int $video_id returns the video id
+     */
+    public static function uploadLink($url, $title = NULL, $description = NULL, $profile = Profile::Medium, $bitrate = 256, $width = 200, $replace_id = NULL, $transcoding = false)
+    {
+        $_url = Vzaar::URL_LIVE . "api/upload/link.xml";
+
+        $signature = Vzaar::getUploadSignature();
+
+        $req = Vzaar::setAuth($_url, 'POST');
+
+        $data = '<?xml version="1.0" encoding="UTF-8"?>
+                <vzaar-api>
+                    <link_upload>
+                        <key>' . $signature['vzaar-api']['key'] . '</key>
+                        <guid>' . $signature['vzaar-api']['guid'] . '</guid>
+                        <url>' . $url . '</url>
+                        <encoding_params>
+                          <title>' . $title . '</title>
+                          <description>' . $description . '</description>
+                          <size_id>' . $size_id . '</size_id>
+                          <bitrate>' . $bitrate . '</bitrate>
+                          <width>' . $width . '</width>
+                          <replace_id>' . $replace_id . '</replace_id>
+                          <transcoding>' . $transcoding . '</transcoding>
+                        </encoding_params>
+                    </link_upload>
+                </vzaar-api>';
+
+        $c = new HttpRequest($_url);
+        $c->verbose = Vzaar::$enableHttpVerbose;
+        $c->method = 'POST';
+
+        array_push($c->headers, $req->to_header());
+        array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
+        array_push($c->headers, 'Connection: close');
+        array_push($c->headers, 'Content-Type: application/xml');
+
+        $reply = $c->send($data);
+
+        $xmlObj = new XMLToArray($reply);
+        $arr = $xmlObj->getArray();
+
+        $video_id = $arr['vzaar-api'] ? $arr['vzaar-api']['id'] : false;
+
+        return $video_id;
+    }
+    
+
+
+    /**
      * Get Upload Signature
      * @static
      * @param null $redirectUrl In case if you are using redirection after your upload, specify redirect URL

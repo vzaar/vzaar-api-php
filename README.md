@@ -103,6 +103,17 @@ $result=Vzaar::uploadThumbnail($video_id, $thumb_path);
 echo($result);
 ```
 
+####Uploading videos using urls
+
+>Uploading a new video or replacing an existing one from an url
+
+```php
+$url = "http://www.mywebsite.com/my_video.mp4";
+echo('uploading video from url: ' . $url);
+$video_id=Vzaar::uploadLink($url);
+echo($video_id);
+```
+
 ####Processing video
 
 >This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
