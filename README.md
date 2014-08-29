@@ -90,6 +90,19 @@ $result=Vzaar::uploadVideo($file);
 echo($result);
 ```
 
+####Uploading thumbnails
+
+>Upload thumbnails for a video by using the video id.
+
+```php
+$video_id = 123;
+
+$thumb_path = "/home/herk/my_image.jpg";
+echo('uploading thumbnail for video:' . $video_id . ', file path:' . $thumb_path);
+$result=Vzaar::uploadThumbnail($video_id, $thumb_path);
+echo($result);
+```
+
 ####Processing video
 
 >This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.

@@ -261,6 +261,40 @@ class Vzaar
     }
 
     /**
+     * Upload thumbnail for the specified video.
+     *
+     * @param int $videoId
+     * @param string $path
+     * @return boolean thumbnail upload status
+     */
+    public static function uploadThumbnail($videoId, $path)
+    {
+        $_url = Vzaar::URL_LIVE . "api/videos/" . $videoId . "/upload_thumb.xml";
+
+        $req = Vzaar::setAuth($_url, 'POST');
+
+        $data = array('vzaar-api[thumbnail]' => "@" . $path . ";type=" . self::_detectMimeType($path));
+
+        $c = new HttpRequest($_url);
+        $c->verbose = Vzaar::$enableHttpVerbose;
+        $c->method = 'POST';
+
+        array_push($c->headers, $req->to_header());
+        array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
+        array_push($c->headers, 'Connection: close');
+        array_push($c->headers, 'Enclosure-Type: multipart/form-data');
+
+        $reply = $c->send($data, $path);
+
+        $xmlObj = new XMLToArray($reply);
+        $arr = $xmlObj->getArray();
+
+        $status = $arr['vzaar-api'] ? $arr['vzaar-api']['status'] : false;
+
+        return $status;
+    }
+
+    /**
      * Get Upload Signature
      * @static
      * @param null $redirectUrl In case if you are using redirection after your upload, specify redirect URL
@@ -472,6 +506,21 @@ class Vzaar
         return $req;
     }
 
+    private static function _detectMimeType($fn) {
+        $mimetype = false;
+
+        if(function_exists('finfo_fopen')) {
+          $finfo = finfo_open(FILEINFO_MIME_TYPE);
+          $mimetype = finfo_file($finfo, $fn);
+          finfo_close($finfo);
+        } elseif(function_exists('getimagesize')) {
+          $size = getimagesize($fn);
+          $mimetype = $size['mime'];
+        } elseif(function_exists('mime_content_type')) {
+           $mimetype = mime_content_type($fn);
+        }
+        return $mimetype;
+    }
 }
 
 class XMLToArray
@@ -584,7 +633,6 @@ class XMLToArray
         elseif (is_array($add)) $update = $add;
         elseif ($add) $update .= $add;
     }
-
 }
 
 ?>
