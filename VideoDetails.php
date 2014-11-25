@@ -120,9 +120,8 @@ class VideoDetails
 					}
 					else
 					{
-						$vid->type = $vars['vzaar-api']->type;
-						$vid->videoStatus = $vars['vzaar-api']->video_status_id;
-						$vid->videoStatusDescription = $vars['vzaar-api']->state;
+						$vid->videoStatus = $vars['vzaar-api']->video->video_status_id;
+						$vid->videoStatusDescription = $vars['vzaar-api']->video->state;
 					}
 				}
 				else
