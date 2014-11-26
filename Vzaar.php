@@ -57,13 +57,11 @@ Class VideoStatusDescriptions
 
 class Vzaar
 {
-    public static $url;
+    public static $url = 'https://vzaar.com/';
     public static $token = '';
     public static $secret = '';
     public static $enableFlashSupport = false;
     public static $enableHttpVerbose = false;
-
-    const URL_LIVE = "https://vzaar.com/";
 
     /**
      * @static
@@ -71,7 +69,7 @@ class Vzaar
      */
     public static function whoAmI()
     {
-        $_url = Vzaar::URL_LIVE . 'api/test/whoami.json';
+        $_url = self::$url . 'api/test/whoami.json';
 
         $req = Vzaar::setAuth($_url);
 
@@ -100,7 +98,7 @@ class Vzaar
      */
     public static function getAccountDetails($account)
     {
-        $_url = Vzaar::URL_LIVE;
+        $_url = self::$url;
 
         $c = new HttpRequest($_url . 'api/accounts/' . $account . '.json');
         $c->verbose = Vzaar::$enableHttpVerbose;
@@ -115,7 +113,7 @@ class Vzaar
      */
     public static function getUserDetails($account)
     {
-        $_url = Vzaar::URL_LIVE;
+        $_url = self::$url;
 
         $r = new HttpRequest($_url . 'api/' . $account . '.xml');
         print_r($r->send());
@@ -140,7 +138,7 @@ class Vzaar
      */
     public static function getVideoList($username, $auth = false, $count = 20, $labels = '', $status = '')
     {
-        $_url = Vzaar::URL_LIVE . 'api/' . $username . '/videos.json?count=' . $count;
+        $_url = self::$url . 'api/' . $username . '/videos.json?count=' . $count;
         if ($labels != '') $_url .= "&labels=" . $labels;
 
         if ($status != '') $_url .= '&status=' . $status;
@@ -167,7 +165,7 @@ class Vzaar
      */
     public static function searchVideoList($username, $auth = false, $title = '', $labels = '', $count = 20, $page = 1, $sort = 'desc')
     {
-        $_url = Vzaar::URL_LIVE . 'api/' . $username . '/videos.json?count=' . $count . '&page=' . $page . '&sort=' . $sort;
+        $_url = self::$url . 'api/' . $username . '/videos.json?count=' . $count . '&page=' . $page . '&sort=' . $sort;
         if ($labels != '' || $labels != null) $_url .= "&labels=" . $labels;
 
         if ($title != '') $_url .= '&title=' . urlencode($title);
@@ -190,7 +188,7 @@ class Vzaar
      */
     public static function getVideoDetails($id, $auth = false)
     {
-        $_url = Vzaar::URL_LIVE . 'api/videos/' . $id . '.json';
+        $_url = self::$url . 'api/videos/' . $id . '.json';
 
         $req = new HttpRequest($_url);
         $req->verbose = Vzaar::$enableHttpVerbose;
@@ -235,7 +233,7 @@ class Vzaar
      */
     public static function uploadSubtitle($language, $videoId, $body)
     {
-        $_url = Vzaar::URL_LIVE . "api/subtitle/upload.xml";
+        $_url = self::$url . "api/subtitle/upload.xml";
 
         $req = Vzaar::setAuth($_url, 'POST');
 
@@ -269,7 +267,7 @@ class Vzaar
      */
     public static function uploadThumbnail($videoId, $path)
     {
-        $_url = Vzaar::URL_LIVE . "api/videos/" . $videoId . "/upload_thumb.xml";
+        $_url = self::$url . "api/videos/" . $videoId . "/upload_thumb.xml";
 
         $req = Vzaar::setAuth($_url, 'POST');
 
@@ -310,7 +308,7 @@ class Vzaar
      */
     public static function uploadLink($url, $title = NULL, $description = NULL, $profile = Profile::Medium, $bitrate = 256, $width = 200, $replace_id = NULL, $transcoding = false)
     {
-        $_url = Vzaar::URL_LIVE . "api/upload/link.xml";
+        $_url = self::$url . "api/upload/link.xml";
 
         $signature = Vzaar::getUploadSignature();
 
@@ -363,7 +361,7 @@ class Vzaar
      */
     public static function getUploadSignature($redirectUrl = null)
     {
-        $_url = Vzaar::URL_LIVE . "api/videos/signature";
+        $_url = self::$url . "api/videos/signature";
 
         if (Vzaar::$enableFlashSupport) {
             $_url .= '?flash_request=true';
@@ -396,7 +394,7 @@ class Vzaar
      */
     public static function getUploadSignatureAsXml($redirectUrl = null)
     {
-        $_url = Vzaar::URL_LIVE . "api/videos/signature";
+        $_url = self::$url . "api/videos/signature";
 
         if (Vzaar::$enableFlashSupport) {
             $_url .= '?flash_request=true';
@@ -429,7 +427,7 @@ class Vzaar
      */
     public static function deleteVideo($id)
     {
-        $_url = Vzaar::URL_LIVE . "api/videos/" . $id . ".json";
+        $_url = self::$url . "api/videos/" . $id . ".json";
 
         $req = Vzaar::setAuth($_url, 'DELETE');
 
@@ -448,7 +446,7 @@ class Vzaar
 
     public static function editVideo($id, $title, $description, $private = 'false', $seoUrl = '')
     {
-        $_url = Vzaar::URL_LIVE . "api/videos/" . $id . ".xml";
+        $_url = self::$url . "api/videos/" . $id . ".xml";
 
         $req = Vzaar::setAuth($_url, 'PUT');
 
@@ -483,7 +481,7 @@ class Vzaar
      */
     public static function processVideo($guid, $title, $description, $labels, $profile = Profile::Medium, $transcoding = false, $replace = '')
     {
-        $_url = Vzaar::URL_LIVE . "api/videos";
+        $_url = self::$url . "api/videos";
 
         if ($replace != '') $replace = '<replace_id>' . $replace . '</replace_id>';
 
@@ -525,7 +523,7 @@ class Vzaar
      */
     public static function processVideoCustomized($guid, $title, $description, $labels, $width = 200, $bitrate = 256, $transcoding = false, $replace = '')
     {
-        $_url = Vzaar::URL_LIVE . "api/videos";
+        $_url = self::$url . "api/videos";
 
         if ($replace != '') $replace = '<replace_id>' . $replace . '</replace_id>';
 
