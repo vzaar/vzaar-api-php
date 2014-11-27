@@ -22,7 +22,6 @@ class User
     static function fromJson($data)
     {
         $jo = json_decode($data);
-        print_r($jo);
 
         if ($jo == NULL) {
             throw new VzaarException('Object not found');

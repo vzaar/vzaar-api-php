@@ -115,9 +115,6 @@ class Vzaar
     {
         $_url = self::$url;
 
-        $r = new HttpRequest($_url . 'api/' . $account . '.xml');
-        print_r($r->send());
-
         $req = new HttpRequest($_url . 'api/' . $account . '.json');
         $req->verbose = Vzaar::$enableHttpVerbose;
 
