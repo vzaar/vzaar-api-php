@@ -103,6 +103,17 @@ $result=Vzaar::uploadThumbnail($video_id, $thumb_path);
 echo($result);
 ```
 
+####Uploading thumbnails
+
+>Generate thumbnail based on frame time.
+
+```php
+$video_id = 123;
+
+$result=Vzaar::generateThumbnail($video_id, 3);
+echo($result);
+```
+
 ####Uploading videos using urls
 
 >Uploading a new video or replacing an existing one from an url

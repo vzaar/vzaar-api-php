@@ -255,6 +255,30 @@ class Vzaar
         return $c->send($data);
     }
 
+    public static function generateThumbnail($videoId, $time)
+    {
+        $_url = self::$url . "api/videos/" . $videoId . "/generate_thumb.xml";
+        $req = Vzaar::setAuth($_url, 'POST');
+
+        $data = '<?xml version="1.0" encoding="UTF-8"?>
+                <vzaar-api>
+                    <video>
+                        <thumb_time>' . $time . '</thumb_time>
+                    </video>
+                </vzaar-api>';
+
+        $c = new HttpRequest($_url);
+        $c->verbose = Vzaar::$enableHttpVerbose;
+        $c->method = 'POST';
+
+        array_push($c->headers, $req->to_header());
+        array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
+        array_push($c->headers, 'Connection: close');
+        array_push($c->headers, 'Content-Type: application/xml');
+
+        return $c->send($data);
+    }
+
     /**
      * Upload thumbnail for the specified video.
      *

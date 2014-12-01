@@ -28,7 +28,7 @@ class User
         } else {
             $user = new User();
 
-            $user->authorName = $jo->author_url;
+            $user->authorName = $jo->author_name;
             $user->playCount = $jo->play_count;
             $user->authorId = $jo->author_id;
             $user->authorUrl = $jo->author_url;
