@@ -292,7 +292,11 @@ class Vzaar
 
         $req = Vzaar::setAuth($_url, 'POST');
 
-        $data = array('vzaar-api[thumbnail]' => "@" . $path . ";type=" . self::_detectMimeType($path));
+        if (function_exists('curl_file_create')) {
+            $data = array('vzaar-api[thumbnail]' => curl_file_create($path, self::_detectMimeType($path)));
+        } else {
+            $data = array('vzaar-api[thumbnail]' => "@" . $path . ";type=" . self::_detectMimeType($path));
+        }
 
         $c = new HttpRequest($_url);
         $c->verbose = Vzaar::$enableHttpVerbose;
@@ -344,7 +348,7 @@ class Vzaar
                         <encoding_params>
                           <title>' . $title . '</title>
                           <description>' . $description . '</description>
-                          <size_id>' . $size_id . '</size_id>
+                          <size_id>' . $profile . '</size_id>
                           <bitrate>' . $bitrate . '</bitrate>
                           <width>' . $width . '</width>
                           <replace_id>' . $replace_id . '</replace_id>
