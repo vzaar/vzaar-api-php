@@ -1,0 +1,6 @@
+2015-01-14 JC <jozef@vzaar.com>
+	
+	* licence added
+	* changelog added
+	* src files moved into src/ directory
+	* composer.json added

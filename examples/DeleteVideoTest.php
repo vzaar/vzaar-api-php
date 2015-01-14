@@ -1,8 +1,8 @@
 <?php
-require_once '../api_helper.php';
+require_once './examples/api_helper.php';
 
 class DeleteVideoTest extends PHPUnit_Framework_TestCase {
-    public static $filePath = "./video.mp4";
+    public static $filePath = "./examples/video.mp4";
     public static function setUpBeforeClass() {
         Vzaar::$url = API_ENVS::get()["url"];
         Vzaar::$token = API_ENVS::get()["user1"]["rw_token"];

@@ -1,5 +1,5 @@
 <?php
-require_once '../api_helper.php';
+require_once './examples/api_helper.php';
 
 class AddSubtitleTest extends PHPUnit_Framework_TestCase {
     public static function setUpBeforeClass() {

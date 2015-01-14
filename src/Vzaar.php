@@ -454,13 +454,13 @@ class Vzaar
     {
         $_url = self::$url . "api/videos/" . $id . ".json";
 
-        $req = Vzaar::setAuth($_url, 'DELETE');
+        $req = Vzaar::setAuth($_url, 'POST');
 
         $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>delete</_method></vzaar-api>';
 
         $c = new HttpRequest($_url);
         $c->verbose = Vzaar::$enableHttpVerbose;
-        $c->method = 'DELETE';
+        $c->method = 'POST';
         array_push($c->headers, $req->to_header());
         array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
         array_push($c->headers, 'Connection: close');

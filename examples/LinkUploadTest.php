@@ -1,5 +1,5 @@
 <?php
-require_once '../api_helper.php';
+require_once './examples/api_helper.php';
 
 class LinkUploadTest extends PHPUnit_Framework_TestCase {
     public static $fileUrl = "http://samples.mplayerhq.hu/MPEG-4/turn-on-off.mp4";
