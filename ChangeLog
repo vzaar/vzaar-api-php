@@ -1,6 +1,11 @@
+2015-01-19 JC <jozef@vzaar.com>
+
+  * CURLFile added to s3 uploads (it fixes upload bug for older php versions e.g 5.5.20)
+
 2015-01-14 JC <jozef@vzaar.com>
 	
 	* licence added
 	* changelog added
 	* src files moved into src/ directory
 	* composer.json added
+
