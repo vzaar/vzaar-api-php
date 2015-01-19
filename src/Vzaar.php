@@ -215,7 +215,15 @@ class Vzaar
         array_push($c->headers, 'x-amz-acl: ' . $signature['vzaar-api']['acl']);
         array_push($c->headers, 'Enclosure-Type: multipart/form-data');
 
-        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'key' => $signature['vzaar-api']['key'], 'file' => "@" . $path);
+
+        if (function_exists('curl_file_create')) {
+            $file = curl_file_create($path, self::_detectMimeType($path));
+        } else {
+            $file = "@" . $path;
+        };
+
+        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'key' => $signature['vzaar-api']['key'], "file" => $file);
+
 
         $reply = $c->send($s3Headers, $path);
 
