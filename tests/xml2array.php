@@ -5,7 +5,7 @@
  * 
  * @author Skitsanos
  */
-require('../Vzaar.php');
+require('../src/Vzaar.php');
 
 $arr = new XMLToArray('<vzaar-api><video><id>1234567</id></video></vzaar-api>');
 

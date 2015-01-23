@@ -2,7 +2,7 @@
 /*
  * @author Skitsanos
 */
-require_once '../../../Vzaar.php';
+require_once '../../../src/Vzaar.php';
 
 
 Vzaar::$secret = 'skitsanos';

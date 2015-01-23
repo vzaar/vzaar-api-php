@@ -3,7 +3,7 @@
  * Vzaar getUserDetais test
  */
 
-include_once '../Vzaar.php';
+include_once '../src/Vzaar.php';
 
 Vzaar::$token = 'PUT_HERE_TOKEN_UVE_GENERATED'; //
 Vzaar::$secret = 'YOUR_USERNAME';

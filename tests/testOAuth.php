@@ -1,5 +1,5 @@
 <?php
-    require_once '../Vzaar.php';
+    require_once '../src/Vzaar.php';
     Vzaar::$token = "token";
     Vzaar::$secret = "secret";
 

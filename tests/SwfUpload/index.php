@@ -3,7 +3,7 @@
  * SWFUpload Test
  * @author skitsanos
  */
-require_once '../../Vzaar.php';
+require_once '../../src/Vzaar.php';
 Vzaar::$token = "qQi7utyEliiPQqiU6sH2u33Z6y80yMZoIYx684Ct9w";
 Vzaar::$secret = "atletesprofessional";
 Vzaar::$enableFlashSupport = true;

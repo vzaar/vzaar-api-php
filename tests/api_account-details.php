@@ -3,8 +3,8 @@
  * @author skitsanos
  */
 
-require_once '../Vzaar.php';
-require_once '../AccountType.php';
+require_once '../src/Vzaar.php';
+require_once '../src/AccountType.php';
 
 /**
  * This API call returns the details and rights for each vzaar account

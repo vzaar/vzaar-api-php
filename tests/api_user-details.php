@@ -2,7 +2,7 @@
 /* 
  * @author Skitsanos
  */
-require_once '../Vzaar.php';
+require_once '../src/Vzaar.php';
 
 /**
  * This API call returns the user's public details along with it's relevant metadata

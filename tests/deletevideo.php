@@ -3,7 +3,7 @@
  * @author skitsanos
  */
 
-require_once '../Vzaar.php';
+require_once '../src/Vzaar.php';
 
 
 Vzaar::$secret = 'YOUR_VZAAR_USERNAME';

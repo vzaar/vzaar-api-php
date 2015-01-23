@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../Vzaar.php';
+require_once '../../src/Vzaar.php';
 Vzaar::$token = "GETUGkPFNC84JlzXkOMSYQFTOCAixOIiroh7oUj3k";
 Vzaar::$secret = "skitsanos";
 

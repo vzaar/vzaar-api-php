@@ -1,7 +1,7 @@
 <?php
 	date_default_timezone_set("Europe/London");
 
-	require_once '../Vzaar.php';
+	require_once '../src/Vzaar.php';
 
 	if (isset($_GET['secret']) && isset($_GET['token'])) {
 		Vzaar::$token = $_GET['token'];
