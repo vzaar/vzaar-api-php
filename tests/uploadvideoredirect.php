@@ -8,7 +8,7 @@ require_once '../src/Vzaar.php';
 Vzaar::$token = 'token'; //
 Vzaar::$secret = 'secret';
 
-$redirect_url='http://vzaarapi.vpn/tests/uploadvideoprocess.php';
+$redirect_url='http://example.com';
 
 $uploadSignature=Vzaar::getUploadSignature($redirect_url);
 
