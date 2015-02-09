@@ -19,7 +19,7 @@ Vzaar::$token = 'VZAAR_API_TOKEN';
 Vzaar::$secret = 'VZAAR_USERNAME';
 ```
 
-In order to use vzaar API, you need to have a valid user name and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api]third_party.)
+In order to use vzaar API, you need to have a valid user name and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api)
 
 The very next thing you would want to do is to check if your account actually works and operational and you can do it by simple calling _whoAmI_:
 
