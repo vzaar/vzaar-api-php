@@ -19,7 +19,7 @@ Vzaar::$token = 'VZAAR_API_TOKEN';
 Vzaar::$secret = 'VZAAR_USERNAME';
 ```
 
-In order to use vzaar API, you need to have a valid user name and API token that you can get from your vzaar dashboard at [http://vzaar.com/settings/](http://vzaar.com/settings/]third_party.)
+In order to use vzaar API, you need to have a valid user name and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api]third_party.)
 
 The very next thing you would want to do is to check if your account actually works and operational and you can do it by simple calling _whoAmI_:
 
@@ -130,7 +130,7 @@ echo($video_id);
 >This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
 
 ```php
-$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, Profile::Original); 
+$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, Profile::Original);
 echo($apireply)
 ```
 
