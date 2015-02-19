@@ -1,3 +1,7 @@
+2015-02-19 JC <jozef@vzaar.com>
+
+  * renditions added to VideoDetails, version bumped to 1.1.0
+  
 2015-01-23 JC <jozef@vzaar.com>
 
   * paths in tests/ updated

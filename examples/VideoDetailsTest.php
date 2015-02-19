@@ -12,6 +12,13 @@ class VideoDetailsTest extends PHPUnit_Framework_TestCase {
         $videoId = API_ENVS::get()["user1"]["test_video_id"];
         $vid = Vzaar::getVideoDetails($videoId, true);
         $this->assertEquals($vid->type, "video");
+        $this->assertEquals($vid->renditions[0]->statusId, 3);
+    }
+
+    public function testRenditions() {
+        $videoId = API_ENVS::get()["user1"]["test_video_id"];
+        $vid = Vzaar::getVideoDetails($videoId, true);
+        $this->assertEquals($vid->renditions[0]->statusId, 3);
     }
 }
 ?>

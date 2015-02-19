@@ -4,6 +4,12 @@
  * Active video and oEmbed details along with it's relevant metadata.
  *
  */
+class Rendition {
+    var $type;
+    var $statusId;
+    var $status;
+}
+
 class VideoDetails
 {
 
@@ -30,6 +36,7 @@ class VideoDetails
 	var $duration;
 	var $videoStatus;
 	var $videoStatusDescription;
+    var $renditions;
 
 	/**
 	 * Package protected constructor.
@@ -60,7 +67,7 @@ class VideoDetails
 
 	}
 
-	function __construct1($type, $version, $title, $description, $authorName, $authorUrl, $authorAccount, $providerName, $providerUrl, $thumbnailUrl, $thumbnailWidth, $thumbnailHeight, $framegrabUrl, $framegrabWidth, $framegrabHeight, $html, $height, $width, $borderless, $duration, $videoStatus)
+	function __construct1($type, $version, $title, $description, $authorName, $authorUrl, $authorAccount, $providerName, $providerUrl, $thumbnailUrl, $thumbnailWidth, $thumbnailHeight, $framegrabUrl, $framegrabWidth, $framegrabHeight, $html, $height, $width, $borderless, $duration, $videoStatus, $renditions)
 	{
 		$this->type = $type;
 		$this->version = $version;
@@ -83,6 +90,7 @@ class VideoDetails
 		$this->borderless = $borderless;
 		$this->duration = $duration;
 		$this->videoStatus = $videoStatus;
+        $this->renditions = $renditions;
 	}
 
 	/**
@@ -149,11 +157,25 @@ class VideoDetails
 					$vid->width = $jo->width;
 					$vid->videoStatus = (array_key_exists('video_status_id', $jo) ? $jo->video_status_id : 0);
 					$vid->videoStatusDescription = (array_key_exists('video_status_description', $jo) ? $jo->video_status_description : '');
+                    $vid->renditions = VideoDetails::parseRenditions($jo->renditions);
 				}
 			}
 			return $vid;
 		}
 	}
+
+    private static function parseRenditions($renditions)
+    {
+        $col = array();
+        foreach ((array)$renditions as $el) {
+            $ren = new Rendition();
+            $ren->type = $el->type;
+            $ren->statusId = $el->status_id;
+            $ren->status = $el->status;
+            array_push($col, $ren);
+        }
+        return $col;
+    }
 
 }
 
