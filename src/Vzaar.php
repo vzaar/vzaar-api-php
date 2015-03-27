@@ -247,7 +247,7 @@ class Vzaar
                     <subtitle>
                         <language>' . $language . '</language>
                         <video_id>' . $videoId . '</video_id>
-                        <body>' . $body . '</body>
+                        <body>' . self::_sanitize_str($body) . '</body>
                     </subtitle>
                 </vzaar-api>';
 
@@ -352,10 +352,10 @@ class Vzaar
                     <link_upload>
                         <key>' . $signature['vzaar-api']['key'] . '</key>
                         <guid>' . $signature['vzaar-api']['guid'] . '</guid>
-                        <url>' . $url . '</url>
+                        <url>' . self::_sanitize_str($url) . '</url>
                         <encoding_params>
-                          <title>' . $title . '</title>
-                          <description>' . $description . '</description>
+                          <title>' . self::_sanitize_str($title) . '</title>
+                          <description>' . self::_sanitize_str($description) . '</description>
                           <size_id>' . $profile . '</size_id>
                           <bitrate>' . $bitrate . '</bitrate>
                           <width>' . $width . '</width>
@@ -483,7 +483,7 @@ class Vzaar
 
         $req = Vzaar::setAuth($_url, 'PUT');
 
-        $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>post</_method><video><title>' . $title . '</title><description>' . $description . '</description>';
+        $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>post</_method><video><title>' . self::_sanitize_str($title) . '</title><description>' . self::_sanitize_str($description) . '</description>';
         //if ($private != '') $data .= '<private>' . $private . '</private>';
         //if ($seoUrl != '') $data .= '<seo_url>' . $seoUrl . '</seo_url>';
         $data .= '</video></vzaar-api>';
@@ -523,9 +523,9 @@ class Vzaar
         $data = '<vzaar-api>
 		    <video>' . $replace . '
 			<guid>' . $guid . '</guid>
-		        <title>' . $title . '</title>
-		        <description>' . $description . '</description>
-		        <labels>' . $labels . '</labels>
+		        <title>' . self::_sanitize_str($title) . '</title>
+		        <description>' . self::_sanitize_str($description) . '</description>
+		        <labels>' . self::_sanitize_str($labels) . '</labels>
 	        	<profile>' . $profile . '</profile>';
         if ($transcoding) $data .= '<transcoding>true</transcoding>';
         $data .= '</video> </vzaar-api>';
@@ -612,6 +612,19 @@ class Vzaar
            $mimetype = mime_content_type($fn);
         }
         return $mimetype;
+    }
+
+    private static function _sanitize_str($str) {
+        return strtr(
+            $str, 
+            array(
+                "<" => "&lt;",
+                ">" => "&gt;",
+                '"' => "&quot;",
+                "'" => "&apos;",
+                "&" => "&amp;",
+            )
+        );
     }
 }
 
