@@ -352,7 +352,7 @@ class Vzaar
                     <link_upload>
                         <key>' . $signature['vzaar-api']['key'] . '</key>
                         <guid>' . $signature['vzaar-api']['guid'] . '</guid>
-                        <url>' . self::_sanitize_str($url) . '</url>
+                        <url>' . urlencode($url) . '</url>
                         <encoding_params>
                           <title>' . self::_sanitize_str($title) . '</title>
                           <description>' . self::_sanitize_str($description) . '</description>

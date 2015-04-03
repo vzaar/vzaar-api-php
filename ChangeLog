@@ -1,3 +1,7 @@
+[1.1.2] 2015-04-03 JC <jozef@vzaar.com>
+
+  * encoding url param added to link upload
+
 [1.1.1] 2015-03-27 JC <jozef@vzaar.com>
 
   * xml sanitizer added
