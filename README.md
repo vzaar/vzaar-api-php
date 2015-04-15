@@ -130,7 +130,7 @@ echo($video_id);
 >This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
 
 ```php
-$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, Profile::Original);
+$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_LABELS, Profile::Original);
 echo($apireply)
 ```
 
@@ -140,6 +140,7 @@ You would need to pass following parameters to this API function:
 * _VIDEO_TITLE_ (string) - Specifies the title for the video
 * _VIDEO_DESCRIPTION_ (string) - Specifies the description for the video
 profile integer - Specifies the size for the video to be encoded in. If not specified, this will use the vzaar default or the user default (if set)
+* _VIDEO_LABELS_ (string) - Comma separated list of labels to be assigned to the video
 
 ####Editing video
 
