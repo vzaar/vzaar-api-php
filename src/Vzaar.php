@@ -14,8 +14,7 @@ require_once 'UploadSignature.php';
 
 date_default_timezone_set('UTC');
 // Check for CURL
-if (!extension_loaded('curl') && !@dl(PHP_SHLIB_SUFFIX == 'so' ? 'curl.so' : 'php_curl.dll')
-) {
+if (!extension_loaded('curl')) {
     exit("\nERROR: CURL extension not loaded\n\n");
 }
 
