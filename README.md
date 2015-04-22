@@ -165,3 +165,8 @@ $apiresult = Vzaar::deleteVideo(VZAAR_VIDEO_ID);
 ```
 
 Where VZAAR_VIDEO_ID is unique vzaar video ID assigned to a video after its processing.
+
+
+### License
+
+Released under the [MIT License](http://www.opensource.org/licenses/MIT).
