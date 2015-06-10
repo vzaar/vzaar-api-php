@@ -37,6 +37,7 @@ class VideoDetails
 	var $videoStatus;
 	var $videoStatusDescription;
     var $renditions;
+	var $totalSize;
 
 	/**
 	 * Package protected constructor.
@@ -67,7 +68,7 @@ class VideoDetails
 
 	}
 
-	function __construct1($type, $version, $title, $description, $authorName, $authorUrl, $authorAccount, $providerName, $providerUrl, $thumbnailUrl, $thumbnailWidth, $thumbnailHeight, $framegrabUrl, $framegrabWidth, $framegrabHeight, $html, $height, $width, $borderless, $duration, $videoStatus, $renditions)
+	function __construct1($type, $version, $title, $description, $authorName, $authorUrl, $authorAccount, $providerName, $providerUrl, $thumbnailUrl, $thumbnailWidth, $thumbnailHeight, $framegrabUrl, $framegrabWidth, $framegrabHeight, $html, $height, $width, $borderless, $duration, $videoStatus, $renditions, $totalSize)
 	{
 		$this->type = $type;
 		$this->version = $version;
@@ -91,6 +92,7 @@ class VideoDetails
 		$this->duration = $duration;
 		$this->videoStatus = $videoStatus;
         $this->renditions = $renditions;
+		$this->totalSize = $totalSize;
 	}
 
 	/**
@@ -158,6 +160,7 @@ class VideoDetails
 					$vid->videoStatus = (array_key_exists('video_status_id', $jo) ? $jo->video_status_id : 0);
 					$vid->videoStatusDescription = (array_key_exists('video_status_description', $jo) ? $jo->video_status_description : '');
                     $vid->renditions = VideoDetails::parseRenditions($jo->renditions);
+					$vid->totalSize = $jo->total_size;
 				}
 			}
 			return $vid;
