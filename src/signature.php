@@ -1,8 +1,8 @@
 <?php
 require_once 'Vzaar.php';
 
-Vzaar::$token = 'YurxlhhEDLkce4psktKGVIxooQlSDF7T4HUWdYp6ZQ'; //
-Vzaar::$secret = 'krevision';
+Vzaar::$token = ''; //
+Vzaar::$secret = '';
 
 $api_reply = Vzaar::getUploadSignature();
 
