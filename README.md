@@ -1,6 +1,6 @@
 vzaar API PHP client
 ---
-Refreshed vzaar API client for PHP developers. Documentation provided below is valid for the library version 2.0 and above.
+vzaar API client for PHP developers.
 
 ---
 
