@@ -483,8 +483,8 @@ class Vzaar
         $req = Vzaar::setAuth($_url, 'PUT');
 
         $data = '<?xml version="1.0" encoding="UTF-8"?><vzaar-api><_method>post</_method><video><title>' . self::_sanitize_str($title) . '</title><description>' . self::_sanitize_str($description) . '</description>';
-        //if ($private != '') $data .= '<private>' . $private . '</private>';
-        //if ($seoUrl != '') $data .= '<seo_url>' . $seoUrl . '</seo_url>';
+        if ($private != '') $data .= '<private>' . $private . '</private>';
+        if ($seoUrl != '') $data .= '<seo_url>' . $seoUrl . '</seo_url>';
         $data .= '</video></vzaar-api>';
 
         $c = new HttpRequest($_url);
