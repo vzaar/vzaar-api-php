@@ -132,7 +132,7 @@ class Vzaar
      * @param string $status
      * @return VideoList
      */
-    public static function getVideoList($username, $auth = false, $count = 20, $page = 1, $labels = '', $status = '')
+    public static function getVideoList($username, $auth = false, $count = 20, $labels = '', $status = '', $page = 1)
     {
         $_url = self::$url . 'api/' . $username . '/videos.json?count=' . $count;
         if ($labels != '') $_url .= "&labels=" . $labels;
@@ -384,7 +384,7 @@ class Vzaar
 
         return $video_id;
     }
-    
+
 
 
     /**
@@ -617,7 +617,7 @@ class Vzaar
 
     private static function _sanitize_str($str) {
         return strtr(
-            $str, 
+            $str,
             array(
                 "<" => "&lt;",
                 ">" => "&gt;",
