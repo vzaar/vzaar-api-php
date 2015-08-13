@@ -132,12 +132,14 @@ class Vzaar
      * @param string $status
      * @return VideoList
      */
-    public static function getVideoList($username, $auth = false, $count = 20, $labels = '', $status = '')
+    public static function getVideoList($username, $auth = false, $count = 20, $page = 1, $labels = '', $status = '')
     {
         $_url = self::$url . 'api/' . $username . '/videos.json?count=' . $count;
         if ($labels != '') $_url .= "&labels=" . $labels;
 
         if ($status != '') $_url .= '&status=' . $status;
+
+        if ($page) $_url .= '&page=' . $page;
 
         $req = new HttpRequest($_url);
         $req->verbose = Vzaar::$enableHttpVerbose;
