@@ -1,4 +1,4 @@
-{ "name": "vzaar",
+{ "name": "vzaar/vzaar-api-php",
   "description": "The PHP client for Vzaar API.",
   "type": "library",
   "version": "1.1.4",
