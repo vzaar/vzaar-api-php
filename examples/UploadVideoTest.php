@@ -8,12 +8,12 @@ class UploadVideoTest extends PHPUnit_Framework_TestCase {
         Vzaar::$token = API_ENVS::get()["user1"]["rw_token"];
         Vzaar::$secret = API_ENVS::get()["user1"]["login"];
     }
-    
-    
+
+
     public function testUploadVideo() {
         $title = "api-php-" . generateRandomStr(5);
         $guid = Vzaar::uploadVideo(self::$filePath);
-        
+
         $videoId = Vzaar::processVideo($guid, $title, "php test", "");
 
         $vid = Vzaar::getVideoDetails($videoId, true);
@@ -21,6 +21,24 @@ class UploadVideoTest extends PHPUnit_Framework_TestCase {
 
         // clean up
         Vzaar::deleteVideo($videoId);
+    }
+
+    public function testNonMulitpartVideoSignature() {
+        $signature = Vzaar::getUploadSignature();
+        $policy = base64_decode($signature['vzaar-api']['policy']);
+
+        // doesn't have chunk and chunks policy
+        $this->assertNotContains('["starts-with","$chunk",""]', $policy);
+        $this->assertNotContains('["starts-with","$chunks",""]', $policy);
+    }
+
+    public function testMulitpartVideoSignature() {
+        $signature = Vzaar::getUploadSignature(null, true);
+        $policy = base64_decode($signature['vzaar-api']['policy']);
+
+        // has chunk and chunks policy
+        $this->assertContains('["starts-with","$chunk",""]', $policy);
+        $this->assertContains('["starts-with","$chunks",""]', $policy);
     }
 }
 ?>

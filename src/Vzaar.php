@@ -205,7 +205,7 @@ class Vzaar
     {
         $signature = Vzaar::getUploadSignature();
 
-        $c = new HttpRequest('https://' . $signature['vzaar-api']['bucket'] . '.s3.amazonaws.com/');
+        $c = new HttpRequest($signature['vzaar-api']['upload_hostname']);
         $c->verbose = Vzaar::$enableHttpVerbose;
 
         $c->method = 'POST';
@@ -391,22 +391,28 @@ class Vzaar
      * Get Upload Signature
      * @static
      * @param null $redirectUrl In case if you are using redirection after your upload, specify redirect URL
+     * @param false $multipart Initiate a multipart upload
      * @return array
      */
-    public static function getUploadSignature($redirectUrl = null)
+    public static function getUploadSignature($redirectUrl = null, $multipart = false)
     {
-        $_url = self::$url . "api/videos/signature";
+        $_url = self::$url . "api/v1.1/videos/signature";
+        $_query = Array();
 
         if (Vzaar::$enableFlashSupport) {
-            $_url .= '?flash_request=true';
+            $_query['flash_request'] = 'true';
         }
 
         if ($redirectUrl != null) {
-            if (Vzaar::$enableFlashSupport) {
-                $_url .= '&success_action_redirect=' . $redirectUrl;
-            } else {
-                $_url .= '?success_action_redirect=' . $redirectUrl;
-            }
+            $_query['success_action_redirect'] = $redirectUrl;
+        }
+
+        if ($multipart) {
+            $_query['multipart'] = 'true';
+        }
+
+        if(count($_query) > 0) {
+            $_url .= "?" . http_build_query($_query);
         }
 
         $req = Vzaar::setAuth($_url, 'GET');
@@ -424,11 +430,12 @@ class Vzaar
      * Get Upload Signature and return it as XML
      * @static
      * @param null $redirectUrl In case if you are using redirection after your upload, specify redirect URL
+     * @param false $multipart Initiate a multipart upload
      * @return array
      */
-    public static function getUploadSignatureAsXml($redirectUrl = null)
+    public static function getUploadSignatureAsXml($redirectUrl = null, $multipart = false)
     {
-        $_url = self::$url . "api/videos/signature";
+        $_url = self::$url . "api/v1.1/videos/signature";
 
         if (Vzaar::$enableFlashSupport) {
             $_url .= '?flash_request=true';
@@ -511,11 +518,12 @@ class Vzaar
      * @param int|\Profile $profile Specifies the size for the video to be encoded in. If not specified, this will use the vzaar default
      * @param boolean $transcoding If True forces vzaar to transcode the video, false makes vzaar use the original source file (available only for mp4 and flv files)
      * @param string $replace Specifies the video ID of an existing video that you wish to replace with the new video.
+     * @param int|\null $chunks The number of chunks a multipart video has been split into
      * @return string
      */
-    public static function processVideo($guid, $title, $description, $labels, $profile = Profile::Medium, $transcoding = false, $replace = '')
+    public static function processVideo($guid, $title, $description, $labels, $profile = Profile::Medium, $transcoding = false, $replace = '', $chunks = null)
     {
-        $_url = self::$url . "api/videos";
+        $_url = self::$url . "api/v1.1/videos";
 
         if ($replace != '') $replace = '<replace_id>' . $replace . '</replace_id>';
 
@@ -527,7 +535,8 @@ class Vzaar
 		        <title>' . self::_sanitize_str($title) . '</title>
 		        <description>' . self::_sanitize_str($description) . '</description>
 		        <labels>' . self::_sanitize_str($labels) . '</labels>
-	        	<profile>' . $profile . '</profile>';
+                <profile>' . $profile . '</profile>';
+        if (!is_null($chunks)) $data .= '<chunks>' . $chunks . '</chunks>';
         if ($transcoding) $data .= '<transcoding>true</transcoding>';
         $data .= '</video> </vzaar-api>';
 
@@ -553,9 +562,10 @@ class Vzaar
      * @param int $bitrate
      * @param bool $transcoding
      * @param string $replace
+     * @param int|\null $chunks The number of chunks a multipart video has been split into
      * @return mixed
      */
-    public static function processVideoCustomized($guid, $title, $description, $labels, $width = 200, $bitrate = 256, $transcoding = false, $replace = '')
+    public static function processVideoCustomized($guid, $title, $description, $labels, $width = 200, $bitrate = 256, $transcoding = false, $replace = '', $chunks = null)
     {
         $_url = self::$url . "api/videos";
 
@@ -569,12 +579,13 @@ class Vzaar
 		        <title>' . $title . '</title>
 		        <description>' . $description . '</description>
 		        <labels>' . $labels . '</labels>
-	        	<profile>' . Profile::Custom . '</profile>
-	        	<encoding>
-	        	    <width>' . $width . '</width>
-	        	    <bitrate>' . $bitrate . '</bitrate>
-	        	</encoding>';
+                <profile>' . Profile::Custom . '</profile>
+                <encoding>
+                    <width>' . $width . '</width>
+                    <bitrate>' . $bitrate . '</bitrate>
+                </encoding>';
         if ($transcoding) $data .= '<transcoding>true</transcoding>';
+        if (!is_null($chunks)) $data .= '<chunks>' . $chunks . '</chunks>';
         $data .= '</video> </vzaar-api>';
 
         $c = new HttpRequest($_url);
