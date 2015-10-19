@@ -1,3 +1,9 @@
+[1.2.0] 2015-10-19 AO <alan@vzaar.com>
+
+  * added support for vzaar upload API 1.1
+  * adds support for chunked uploads
+  * adds upload_hostname to signature response
+
 [1.1.5] 2015-08-13 EJ <ed@vzaar.com>
 
   * updated composer.json for Packagist

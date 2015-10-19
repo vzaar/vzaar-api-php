@@ -36,7 +36,7 @@ class UploadSignature {
      * @param acl the access control policy to apply to the uploaded file
      * @param bucket the vzaar bucket that has been allocated for this file
      * @param policy a Base64-encoded policy document that applies rules to
-     *	file uploads sent by the S2 POST form. This document is used to authorise
+     *	file uploads sent by the S3 POST form. This document is used to authorise
      *	the form, and to impose conditions on the files that can be uploaded.
      * @param expirationDate s Greenwich Mean Time (GMT) timestamp that
      *	specifies when the policy document will expire. Once a policy document
