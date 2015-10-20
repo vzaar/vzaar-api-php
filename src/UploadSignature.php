@@ -31,24 +31,24 @@ class UploadSignature {
      *
      * @param guid the vzaar global unique identifier
      * @param key a name for the S3 object that will store the uploaded
-     * 		file's data
+     *		file's data
      * @param https
      * @param acl the access control policy to apply to the uploaded file
      * @param bucket the vzaar bucket that has been allocated for this file
      * @param policy a Base64-encoded policy document that applies rules to
-     * 	file uploads sent by the S3 POST form. This document is used to authorise
-     * 	the form, and to impose conditions on the files that can be uploaded.
+     *	file uploads sent by the S3 POST form. This document is used to authorise
+     *	the form, and to impose conditions on the files that can be uploaded.
      * @param expirationDate s Greenwich Mean Time (GMT) timestamp that
-     * 	specifies when the policy document will expire. Once a policy document
-     * 	has expired, the upload will fail
+     *	specifies when the policy document will expire. Once a policy document
+     *	has expired, the upload will fail
      * @param accessKey the vzaar AWS Access Key Identifier credential
      * @param signature a signature value that authorises the form and proves
-     * 	that only vzaar could have created it. This value is calculated by signing
-     * 	the policy document
+     *	that only vzaar could have created it. This value is calculated by signing
+     *	the policy document
      */
     function __construct($guid, $key, $https, $acl,
             $bucket, $policy, $expirationDate,
-            $accessKeyId, $signature) {
+            $accessKeyId, $signature, $uploadHostname) {
         $this->guid = $guid;
         $this->key = $key;
         $this->https = $https;
@@ -58,6 +58,7 @@ class UploadSignature {
         $this->expirationdate = $expirationDate;
         $this->accesskeyid = $accessKeyId;
         $this->signature = $signature;
+        $this->uploadHostname = $uploadHostname;
     }
 
     static function fromJson($data) {
