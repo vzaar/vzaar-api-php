@@ -1,3 +1,7 @@
+[1.2.1] 2016-02-09 EV <evi@vzaar.com>
+
+  * upgraded to php 7.x compatibility
+
 [1.2.0] 2015-10-19 AO <alan@vzaar.com>
 
   * added support for vzaar upload API 1.1

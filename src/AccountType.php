@@ -8,7 +8,7 @@ Class CostType {
      * @param <string> $currency
      * @param <integer> $monthly
      */
-    public function CostType($currency, $monthly) {
+    public function __construct($currency, $monthly) {
 	$this->currency = $currency;
 	$this->monthly = $monthly;
     }
@@ -17,7 +17,7 @@ Class CostType {
 Class RightsType {
     var $borderless;
     var $searchEnhancer;
-    public function RightsType($borderless, $searchEnhancer) {
+    public function __construct($borderless, $searchEnhancer) {
 	$this->borderless = $borderless;
 	$this->searchEnhancer = $searchEnhancer;
     }
@@ -48,7 +48,7 @@ class AccountType {
      * @param searchEnhancer if the user is allowed to optimize where google
      * 			directs video traffic
      */
-    public function AccountType($version, $accountId, $title, $monthly, $currency, $bandwidth, $borderless, $searchEnhancer) {
+    public function __construct($version, $accountId, $title, $monthly, $currency, $bandwidth, $borderless, $searchEnhancer) {
 	$this->version = $version;
 	$this->accountId = $accountId;
 	$this->title = $title;
