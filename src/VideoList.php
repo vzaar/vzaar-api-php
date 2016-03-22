@@ -1,13 +1,7 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
-*/
-
 /**
  * VideoList
  *
- * @author Skitsanos
  */
 require_once 'Video.php';
 require_once 'User.php';
@@ -30,7 +24,7 @@ class VideoList {
                 $video->duration = $jo[$i]->duration;
                 $video->playCount = $jo[$i]->play_count;
                 $video->title = $jo[$i]->title;
-		$video->description = $jo[$i]->description;
+                $video->description = $jo[$i]->description;
                 $video->url = $jo[$i]->url;
                 $video->createdAt = $jo[$i]->created_at;
                 $video->version = $jo[$i]->version;
@@ -43,7 +37,7 @@ class VideoList {
                 $video->thumbnail = $jo[$i]->thumbnail;
                 $video->width = $jo[$i]->width;
                 $video->height = $jo[$i]->height;
-				$video->framegrabUrl = 'http://vzaar.com/videos/' . $jo[$i]->id . '.frame';
+                $video->framegrabUrl = Vzaar::$url . 'videos/' . $jo[$i]->id . '.frame';
 
                 array_push($videos, $video);
             }
