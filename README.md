@@ -19,70 +19,65 @@ Vzaar::$token = 'VZAAR_API_TOKEN';
 Vzaar::$secret = 'VZAAR_USERNAME';
 ```
 
-In order to use vzaar API, you need to have a valid user name and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api)
+In order to use the vzaar API, you need to have a valid username and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api)
 
-The very next thing you would want to do is to check if your account actually works and operational and you can do it by simple calling _whoAmI_:
+To check you can connect via the API, you can run the following command:
 
 ```php
 echo(Vzaar::whoAmI());
 ```
 
-If it returns you your vzaar username, - we are good to go.
+If it returns you your vzaar username, then you're good to go.
 
 ####User Details
 
->This API call returns the user's public details along with it's relevant metadata. It also contains vzaar Account ID that you can use in _getAccountDetails_ call.
+This API call returns the user's public details along with relevant metadata.
 
 ```php
 print_r(Vzaar::getUserDetails('VZAAR_USERNAME'));
 ```
 
-Where _VZAAR_USERNAME_ is the vzaar username. Result of this call will be an object of UserDetails type.
+Where _VZAAR__USERNAME_ is the vzaar username. Result of this call will be an object of UserDetails type.
 
-####Account Details
-
->This API call returns the details and rights for each vzaar subscription account type along with it's relevant metadata. This will show the details of the packages available here: [http://vzaar.com/pricing](http://vzaar.com/pricing)
-
-```php
-print_r(Vzaar::getAccountDetails(VZAAR_ACCOUNT_ID));
-```
-
-Where _VZAAR_ACCOUNT_ID_ is the unique account id assigned by vzaar.
-
-Result of this call will be an object of AccountDetails type.
 
 ####Video List
 
->This API call returns a list of the user's active videos along with it's relevant metadata. 20 videos are returned by default, but this is customizable.
+This API call returns a list of the user's active videos along with relevant metadata. 20 videos are returned by default, but this is customizable.
 
 ```php
 print_r(Vzaar::getVideoList('VZAAR_USERNAME', true, 10));
 ```
 
+In this example, the `true` parameter says that the API call should be authenticated. If you have your API settings set to 'private', then you will need to be authenticated.
+
 ####Video Details
 
->This API call returns metadata about selected video, like its dimensions, thumbnail information, author, duration, play count and so on.
+This API call returns metadata about the selected video, like its dimensions, thumbnail information, author, duration, play count and so on.
 
 ```php
 print_r(Vzaar::getVideoDetails(VZAAR_VIDEO_ID, true));
 ```
 
-Where _VZAAR_VIDEO_ID_ is unique vzaar video ID assigned to a video after its processing.
+In this case, VZAAR_VIDEO_ID_ is the unique vzaar video ID assigned to a video after its processing.
 
 ####Upload Signature
 
->In some cases you might need to not perform actual uploading from API but to use some third-party uploaders, like S3_Upload widget, or any other, so you would need to get only upload signature for it.
+In some cases you might need to not perform actual uploading from API but to use some third-party uploaders, like S3_Upload widget or similar, so you would need to get only upload signature for it.
 
 ```php
 print_r(Vzaar::getUploadSignature());
 ```
 
-####Uploading video
+###Uploading and processing videos
 
->Upload video from local drive directly to Amazon S3 bucket. Use this method when you build desktop apps or when you upload videos to vzaar directly from your server.
+Getting a video into your vzaar account is a two step process; you must first upload and then process the video.
+
+####Uploading videos from the filesystem
+
+Upload video from local drive directly to Amazon S3 bucket. Use this method when you build desktop apps or when you upload videos to vzaar directly from your server.
 
 ```php
-$filename = '548.mov'; // the file must be located in the same directory as the script. If not use full disk path
+$filename = '548.mov'; // the file must be located in the same directory as the script. If not use full disk path.
 
 $file = getcwd() . '\\' . $filename;
 echo('file to upload: ' . $file);
@@ -90,9 +85,38 @@ $result=Vzaar::uploadVideo($file);
 echo($result);
 ```
 
+####Uploading videos using a url
+
+Uploading a new video or replacing an existing one from a url
+
+```php
+$url = "http://www.mywebsite.com/my_video.mp4";
+echo('uploading video from url: ' . $url);
+$video_id=Vzaar::uploadLink($url);
+echo($video_id);
+```
+
+####Processing videos
+
+This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
+
+```php
+$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_LABELS, Profile::Original);
+echo($apireply)
+```
+
+You would need to pass following parameters to this API function:
+
+* _GUID_ (string) - Specifies the guid to operate on. This will have been the return value from the previous `uploadVideo` or `uploadLink` operation.
+* _VIDEO__TITLE_ (string) - Specifies the title for the video
+* _VIDEO_DESCRIPTION_ (string) - Specifies the description for the video
+* _PROFILE_ (integer) - Specifies the size for the video to be encoded in. If not specified, this will use the vzaar default or the user default (if set)
+* _VIDEO_LABELS_ (string) - Comma separated list of labels to be assigned to the video
+
+
 ####Uploading thumbnails
 
->Upload thumbnails for a video by using the video id.
+Upload thumbnails for a video by using the video id.
 
 ```php
 $video_id = 123;
@@ -105,7 +129,7 @@ echo($result);
 
 ####Uploading thumbnails
 
->Generate thumbnail based on frame time.
+Generate a thumbnail based on frame time.
 
 ```php
 $video_id = 123;
@@ -114,37 +138,10 @@ $result=Vzaar::generateThumbnail($video_id, 3);
 echo($result);
 ```
 
-####Uploading videos using urls
-
->Uploading a new video or replacing an existing one from an url
-
-```php
-$url = "http://www.mywebsite.com/my_video.mp4";
-echo('uploading video from url: ' . $url);
-$video_id=Vzaar::uploadLink($url);
-echo($video_id);
-```
-
-####Processing video
-
->This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
-
-```php
-$apireply = Vzaar::processVideo(GUID, VIDEO_TITLE, VIDEO_DESCRIPTION, VIDEO_LABELS, Profile::Original);
-echo($apireply)
-```
-
-You would need to pass following parameters to this API function:
-
-* _GUID_ (string) - Specifies the guid to operate on
-* _VIDEO_TITLE_ (string) - Specifies the title for the video
-* _VIDEO_DESCRIPTION_ (string) - Specifies the description for the video
-* _PROFILE_ (integer) - Specifies the size for the video to be encoded in. If not specified, this will use the vzaar default or the user default (if set)
-* _VIDEO_LABELS_ (string) - Comma separated list of labels to be assigned to the video
 
 ####Editing video
 
->This API call allows a user to edit or change details about a video in the system.
+This API call allows a user to edit or change details about a video in the system.
 
 ```php
 $apiresult = Vzaar::editVideo(VIDEO_ID, VIDEO_TITLE, VIDEO_DESCRIPTION, MARK_AS_PRIVATE);
@@ -157,14 +154,13 @@ The following arguments should be passed to the method:
 * _VIDEO_DESCRIPTION_ (string) - Specifies the new description for the video
 * _MARK_AS_PRIVATE_ (boolean) (true|false) - Marks the video as private or public
 
+
 ####Deleting video
->This API call allows you to delete a video from your account. If deletion was successful it will return you _true_ otherwise _false_.
+This API call allows you to delete a video from your account. If deletion was successful it will return you _true_ otherwise _false_.
 
 ```php
 $apiresult = Vzaar::deleteVideo(VZAAR_VIDEO_ID);
 ```
-
-Where VZAAR_VIDEO_ID is unique vzaar video ID assigned to a video after its processing.
 
 
 ### License

@@ -42,7 +42,7 @@ class Video
 		$video->thumbnail = $jo->thumbnail;
 		$video->width = $jo->width;
 		$video->height = $jo->height;
-		$video->framegrabUrl = 'http://vzaar.com/videos/' . $jo->id . '.frame';
+		$video->framegrabUrl = $jo->framegrab_url;
 
 		return $video;
 	}
