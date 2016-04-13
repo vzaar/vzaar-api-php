@@ -107,8 +107,8 @@ echo($apireply)
 
 You would need to pass following parameters to this API function:
 
-* _GUID_ (string) - Specifies the guid to operate on. This should have been returned from the upload operation.
-* _VIDEO_TITLE_ (string) - Specifies the title for the video
+* _GUID_ (string) - Specifies the guid to operate on. This will have been the return value from the previous `uploadVideo` or `uploadLink` operation.
+* _VIDEO__TITLE_ (string) - Specifies the title for the video
 * _VIDEO_DESCRIPTION_ (string) - Specifies the description for the video
 * _PROFILE_ (integer) - Specifies the size for the video to be encoded in. If not specified, this will use the vzaar default or the user default (if set)
 * _VIDEO_LABELS_ (string) - Comma separated list of labels to be assigned to the video
