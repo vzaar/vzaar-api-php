@@ -1,16 +1,10 @@
 <?php
 /* Vzaar API Implementation
- * Works for public API and OAuth both
- * All methods listed till today (October 29, 2009) - fully supported
- *
  *
  * In order to use OAuth based API please make sure you've generated your own
  * token. All samples in /test folder provided just for the reference.
  *
- * This PHP implementation been tested under Linux/Apache and Windows/IIS both.
- *
- * @author skitsanos
- * @version 1.4
+ * This PHP implementation been tested under Linux/Apache and Windows/IIS.
  */
 
 require_once 'Vzaar.php';
