@@ -203,8 +203,17 @@ class Vzaar
      */
     public static function uploadVideo($path)
     {
-        $signature = Vzaar::getUploadSignature();
+        $signature = Vzaar::getUploadSignature(null, $path, true, basename($path), filesize($path));
 
+        if(!isset($signature['vzaar-api']['chunk_size'])){
+            return self::simpleUpload($signature, $path);
+        }else{
+           return self::multipartUpload($signature, $path);
+        }
+    }
+
+    private static function simpleUpload($signature,$path)
+    {
         $c = new HttpRequest($signature['vzaar-api']['upload_hostname']);
         $c->verbose = Vzaar::$enableHttpVerbose;
 
@@ -223,7 +232,7 @@ class Vzaar
             $file = "@" . $path;
         };
 
-        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'key' => $signature['vzaar-api']['key'], "file" => $file);
+        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'chunks' => 0,'chunk' =>0 , 'key' => $signature['vzaar-api']['key'], "file" => $file);
 
 
         $reply = $c->send($s3Headers, $path);
@@ -231,6 +240,52 @@ class Vzaar
         $xmlObj = new XMLToArray($reply, array(), array(), true, false);
         $arrObj = $xmlObj->getArray();
         $key = explode('/', $arrObj['PostResponse']['Key']);
+        return $key[sizeOf($key) - 2];
+    }
+
+    private static function multipartUpload($signature, $path)
+    {
+        $chunkSize = self::chunk_size_bytes($signature['vzaar-api']['chunk_size']);
+        $filename = basename($path);
+        $size = filesize($path);
+        $totalChunks = ceil($size / $chunkSize);
+        $chunk = 0;
+        $file = fopen($path, "rb") or exit("unable to open file ($filename)");
+
+        $key = null;
+        while(!feof($file)){
+            $c = new HttpRequest($signature['vzaar-api']['upload_hostname']);
+            $c->verbose = Vzaar::$enableHttpVerbose;
+
+            $c->method = 'POST';
+            $c->uploadMode = true;
+            $c->useSsl = true;
+
+            array_push($c->headers, 'User-Agent: Vzaar API Client');
+            array_push($c->headers, 'x-amz-acl: ' . $signature['vzaar-api']['acl']);
+            array_push($c->headers, 'Enclosure-Type: multipart/form-data');
+
+            $data = fread($file, $chunkSize);
+
+            $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'chunks' => $totalChunks ,'chunk' =>$chunk ,'key' => str_replace('${filename}',$filename,$signature['vzaar-api']['key']).'.'.$chunk , "file" => $data);
+
+            $reply = $c->send($s3Headers, $path);
+
+            $chunk ++;
+
+            $xmlObj = new XMLToArray($reply, array(), array(), true, false);
+            $arrObj = $xmlObj->getArray();
+
+            if(!isset($arrObj['PostResponse']['Key'])){
+                fclose($file);
+                return false;
+            }
+
+            $key = explode('/', $arrObj['PostResponse']['Key']);
+        }
+
+        fclose($file);
+
         return $key[sizeOf($key) - 2];
     }
 
@@ -344,7 +399,7 @@ class Vzaar
     {
         $_url = self::$url . "api/upload/link.xml";
 
-        $signature = Vzaar::getUploadSignature();
+        $signature = Vzaar::getUploadSignature(null, $url);
 
         $req = Vzaar::setAuth($_url, 'POST');
 
@@ -394,10 +449,28 @@ class Vzaar
      * @param false $multipart Initiate a multipart upload
      * @return array
      */
-    public static function getUploadSignature($redirectUrl = null, $multipart = false)
+    public static function getUploadSignature($redirectUrl = null, $path, $multipart = false, $filename=null, $filesize=null)
     {
+        if($path==null){
+            throw new VzaarException('path/url could not be null');
+        }
         $_url = self::$url . "api/v1.1/videos/signature";
         $_query = Array();
+
+        if (!preg_match('/^(https?:\/\/+[\w\-]+\.[\w\-]+)/i',$path))
+        {
+            $_url .= "?path=" .$path;
+            if ($filename != null) {
+                $_query['filename'] = $filename;
+            }
+
+            if ($filesize != null) {
+                $_query['filesize'] = $filesize;
+            }
+
+        }else{
+            $_url .= "?url=" .$path;
+        }
 
         if (Vzaar::$enableFlashSupport) {
             $_query['flash_request'] = 'true';
@@ -412,7 +485,7 @@ class Vzaar
         }
 
         if(count($_query) > 0) {
-            $_url .= "?" . http_build_query($_query);
+            $_url .= "&" . http_build_query($_query);
         }
 
         $req = Vzaar::setAuth($_url, 'GET');
@@ -637,6 +710,10 @@ class Vzaar
                 "&" => "&amp;",
             )
         );
+    }
+
+    private static function chunk_size_bytes($str){
+        return (int)$str*pow(1024,2);
     }
 }
 

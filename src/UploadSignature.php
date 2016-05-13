@@ -48,7 +48,7 @@ class UploadSignature {
      */
     function __construct($guid, $key, $https, $acl,
             $bucket, $policy, $expirationDate,
-            $accessKeyId, $signature, $uploadHostname) {
+            $accessKeyId, $signature, $uploadHostname, $chunkSize) {
         $this->guid = $guid;
         $this->key = $key;
         $this->https = $https;
@@ -59,6 +59,7 @@ class UploadSignature {
         $this->accesskeyid = $accessKeyId;
         $this->signature = $signature;
         $this->uploadHostname = $uploadHostname;
+        $this->chunkSize = $chunkSize;
     }
 
     static function fromJson($data) {
