@@ -3,3 +3,4 @@ api_envs.php
 vendor
 .idea
 .DS_Store
+*.mp4

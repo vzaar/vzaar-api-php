@@ -4,6 +4,7 @@
  * Vzaar API Framework
  * @author Skitsanos
  */
+require_once 'Constants.php';
 require_once 'OAuth.php';
 require_once 'HttpRequest.php';
 require_once 'AccountType.php';
@@ -232,8 +233,16 @@ class Vzaar
             $file = "@" . $path;
         };
 
-        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'chunks' => 0,'chunk' =>0 , 'key' => $signature['vzaar-api']['key'], "file" => $file);
-
+        $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'],
+          'Signature' => $signature['vzaar-api']['signature'],
+          'acl' => $signature['vzaar-api']['acl'],
+          'bucket' => $signature['vzaar-api']['bucket'],
+          'policy' => $signature['vzaar-api']['policy'],
+          'success_action_status' => 201,
+          'chunks' => 0,'chunk' => 0,
+          'x-amz-meta-uploader' => Constants::Uploader,
+          'key' => $signature['vzaar-api']['key'],
+          'file' => $file);
 
         $reply = $c->send($s3Headers, $path);
 
@@ -267,7 +276,17 @@ class Vzaar
 
             $data = fread($file, $chunkSize);
 
-            $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'], 'Signature' => $signature['vzaar-api']['signature'], 'acl' => $signature['vzaar-api']['acl'], 'bucket' => $signature['vzaar-api']['bucket'], 'policy' => $signature['vzaar-api']['policy'], 'success_action_status' => 201, 'chunks' => $totalChunks ,'chunk' =>$chunk ,'key' => str_replace('${filename}',$filename,$signature['vzaar-api']['key']).'.'.$chunk , "file" => $data);
+            $s3Headers = array('AWSAccessKeyId' => $signature['vzaar-api']['accesskeyid'],
+              'Signature' => $signature['vzaar-api']['signature'],
+              'acl' => $signature['vzaar-api']['acl'],
+              'bucket' => $signature['vzaar-api']['bucket'],
+              'policy' => $signature['vzaar-api']['policy'],
+              'success_action_status' => 201,
+              'chunks' => $totalChunks,
+              'chunk' => $chunk,
+              'x-amz-meta-uploader' => Constants::Uploader,
+              'key' => str_replace('${filename}',$filename,$signature['vzaar-api']['key']).'.'.$chunk,
+              'file' => $data);
 
             $reply = $c->send($s3Headers, $path);
 
@@ -468,7 +487,7 @@ class Vzaar
                 $_query['filesize'] = $filesize;
             }
 
-        }else{
+        } else {
             $_url .= "?url=" .$path;
         }
 
@@ -482,6 +501,7 @@ class Vzaar
 
         if ($multipart) {
             $_query['multipart'] = 'true';
+            $_query['uploader'] = Constants::Uploader;
         }
 
         if(count($_query) > 0) {
