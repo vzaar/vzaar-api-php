@@ -473,50 +473,49 @@ class Vzaar
         if($path==null){
             throw new VzaarException('path/url could not be null');
         }
-        $_url = self::$url . "api/v1.1/videos/signature";
-        $_query = Array();
 
         if (!preg_match('/^(https?:\/\/+[\w\-]+\.[\w\-]+)/i',$path))
         {
-            $_url .= "?path=" .$path;
+            $_url = "path=" .$path;
             if ($filename != null) {
-                $_query['filename'] = $filename;
+              $_url .= "&filename=" .$filename;
             }
 
             if ($filesize != null) {
-                $_query['filesize'] = $filesize;
+              $_url .= "&filesize=" .$filesize;
             }
 
         } else {
-            $_url .= "?url=" .$path;
+            $_url .= "url=" .$path;
         }
 
         if (Vzaar::$enableFlashSupport) {
-            $_query['flash_request'] = 'true';
+          $_url .= "&flash_request=true";
         }
 
         if ($redirectUrl != null) {
-            $_query['success_action_redirect'] = $redirectUrl;
+          $_url .= "&success_action_redirect=" .$redirectUrl;
         }
 
         if ($multipart) {
-            $_query['multipart'] = 'true';
-            $_query['uploader'] = Constants::Uploader;
+          $_url .= "&multipart=true";
+          $_url .= "&uploader=" .Constants::Uploader;
         }
 
-        if(count($_query) > 0) {
-            $_url .= "&" . http_build_query($_query);
-        }
+        $_base_url = self::$url . "api/v1.1/videos/signature?";
+        $_auth_url = $_base_url . $_url;
+        $_http_url = $_base_url . str_replace(' ', '+', $_url);
 
-        $req = Vzaar::setAuth($_url, 'GET');
+        $req = Vzaar::setAuth($_auth_url, 'GET');
         $req->verbose = Vzaar::$enableHttpVerbose;
 
-        $c = new HttpRequest($_url);
+        $c = new HttpRequest($_http_url);
         $c->method = 'GET';
         array_push($c->headers, $req->to_header());
         array_push($c->headers, 'User-Agent: Vzaar OAuth Client');
 
-        return UploadSignature::fromXml($c->send());
+        $data = $c->send();
+        return UploadSignature::fromXml($data);
     }
 
     /**
