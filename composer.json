@@ -1,24 +1,28 @@
-{ "name": "vzaar/vzaar-api-php",
+{
+  "name": "vzaar/vzaar-api-php",
   "description": "The PHP client for Vzaar API.",
   "type": "library",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "keywords": [ "vzaar", "video", "api" ],
-
   "homepage": "https://github.com/vzaar/vzaar-api-php",
   "license": "MIT",
   "authors": [
-    { "name": "Evi Skitsanos",
-      "email": "evi@vzaar.com",
-      "role": "lead" },
-
-    { "name": "Jozef Chraplewski",
-      "email": "jozef@vzaar.com" }
+    {
+      "name": "Evi Skitsanos",
+      "email": "evi@vzaar.com"
+    },
+    {
+      "name": "Jozef Chraplewski",
+      "email": "jozef@vzaar.com"
+    },
+    {
+      "name": "Ed James",
+      "email": "ed@vzaar.com"
+    }
   ],
-
   "support": {
     "issues": "https://vzaar.com/help"
   },
-
   "require-dev": {
     "phpunit/phpunit": "~4.3.5"
   }
