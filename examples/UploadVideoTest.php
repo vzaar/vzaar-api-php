@@ -24,7 +24,7 @@ class UploadVideoTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testNonMulitpartVideoSignature() {
-        $signature = Vzaar::getUploadSignature();
+        $signature = Vzaar::getUploadSignature(null, '/tmp/video.mp4', false, 'video.mp4', 102400);
         $policy = base64_decode($signature['vzaar-api']['policy']);
 
         // doesn't have chunk and chunks policy
@@ -33,7 +33,7 @@ class UploadVideoTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testMulitpartVideoSignature() {
-        $signature = Vzaar::getUploadSignature(null, true);
+        $signature = Vzaar::getUploadSignature(null, '/tmp/video.mp4', true, 'video.mp4', 102400);
         $policy = base64_decode($signature['vzaar-api']['policy']);
 
         // has chunk and chunks policy
