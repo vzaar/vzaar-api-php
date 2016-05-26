@@ -14,6 +14,15 @@ Vzaar::$token = 'VZAAR_API_TOKEN';
 Vzaar::$secret = 'VZAAR_USERNAME';
 ```
 
+*For versions > 1.3.0*, if you have installed the library through Composer, you may require the Composer autoload file instead of individual Vzaar source files. Composer will automatically find and load your classes when used:
+
+```php
+require_once 'vendor/autoload.php';
+
+Vzaar::$token = 'VZAAR_API_TOKEN';
+Vzaar::$secret = 'VZAAR_USERNAME';
+```
+
 In order to use the vzaar API, you need to have a valid username and API token that you can get from your vzaar dashboard at [http://app.vzaar.com/settings/api](http://app.vzaar.com/settings/api)
 
 To check you can connect via the API, you can run the following command:
