@@ -2,7 +2,7 @@
   "name": "vzaar/vzaar-api-php",
   "description": "The PHP client for Vzaar API.",
   "type": "library",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "keywords": [ "vzaar", "video", "api" ],
   "homepage": "https://github.com/vzaar/vzaar-api-php",
   "license": "MIT",
