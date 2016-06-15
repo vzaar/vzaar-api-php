@@ -85,8 +85,13 @@ Vzaar::getUploadSignature(null, '/tmp/video.mp4', true, 'video.mp4', 102400);
 ```
 
 ##### Note
-As of version *1.3.0* the method signature for `getUploadSignature` has changed. The new method
-expects additional arguments which are required to support multipart uploads.
+As of version *1.3.0* the method signature for `getUploadSignature` has changed. The new method expects additional arguments which are required to support multipart uploads.
+
+`$redirectUrl`: if you are using redirection after your upload, specify redirect URL  
+`$path`: path to the source file  
+`$multipart`: if true, initiate a multipart upload  
+`$filename`: source file name  
+`$filesize`: source file size  
 
 ### Uploading and processing videos
 
