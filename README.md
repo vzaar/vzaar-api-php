@@ -117,7 +117,7 @@ Vzaar::uploadLink($url, "Title");
 
 #### Processing videos
 
-This API call tells the vzaar system to process a newly uploaded video. This will encode it if necessary and then provide a vzaar video ID back.
+This API call tells the vzaar system to process a newly uploaded video. This will provide a vzaar video ID, then encode the video if necessary. 
 
 Typically you only need to do this when performing your own uploads (see _Upload Signature_).
 
