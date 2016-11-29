@@ -10,19 +10,19 @@
          *
          */
         
-        $id = Vzaar\Client::$id;
-        $token = Vzaar\Client::$token;
+        $client_id = VzaarApi\Client::$client_id;
+        $auth_token = VzaarApi\Client::$auth_token;
         
         //create configuration array for new API Client object
-        $config = array('id' => $id,
-                        'token' => $token);
+        $config = array('client_id' => $client_id,
+                        'auth_token' => $auth_token);
         
         //create API Client
-        $client = new Vzaar\Client($config);
+        $client = new VzaarApi\Client($config);
         
         //get prestet ids array
         $presets = array();
-        foreach(Vzaar\PresetsList::each_item(null,$client) as $preset) {
+        foreach(VzaarApi\PresetsList::each_item(null,$client) as $preset) {
             
             $presets[] = $preset->id;
         
@@ -44,7 +44,7 @@
             
                 $start = $value;
                 while($start > 0) {
-                    $preset = Vzaar\Preset::find($value,$client);
+                    $preset = VzaarApi\Preset::find($value,$client);
                     --$start;
                 }
                 
@@ -72,11 +72,11 @@
         
         echo PHP_EOL;
         
-    }catch(Vzaar\VzaarException $ve){
+    }catch(VzaarApi\VzaarException $ve){
         
         echo $ve->getMessage();
         
-    }catch(Vzaar\VzaarError $verr){
+    }catch(VzaarApi\VzaarError $verr){
         
         echo $verr->getMessage();
         

@@ -14,25 +14,25 @@
         $params['name'] = "Example Recipe 123";
         
         //get prestes
-        foreach(Vzaar\PresetsList::each_item() as $preset) {
+        foreach(VzaarApi\PresetsList::each_item() as $preset) {
             
             $params['encoding_preset_ids'][] = $preset->id;
             
         }
         
         //create Recipe
-        $recipe = Vzaar\Recipe::create($params);
+        $recipe = VzaarApi\Recipe::create($params);
         
         echo PHP_EOL.'Create id: ' . $recipe->id  .' - '. $recipe->name;
         
         
         //lookup Recipe
-        $lookup = Vzaar\Recipe::find($recipe->id);
+        $lookup = VzaarApi\Recipe::find($recipe->id);
         
         echo PHP_EOL.'Lookup id: ' . $lookup->id  .' - '. $lookup->name;
         
         //get all Recipes
-        foreach(Vzaar\RecipesList::each_item() as $value) {
+        foreach(VzaarApi\RecipesList::each_item() as $value) {
             
             echo PHP_EOL.'List Name : '. $value->name;
             
@@ -50,13 +50,13 @@
         echo PHP_EOL.'Lookup multipass: '. ($lookup->multipass ? 'true' : 'false');
         
         //lookup
-        $lookup = Vzaar\Recipe::find($lookup->id);
+        $lookup = VzaarApi\Recipe::find($lookup->id);
         
         echo PHP_EOL.'Lookup id: ' . $lookup->id  .' - '. $lookup->name;
         echo PHP_EOL.'Lookup multipass'. ($lookup->multipass ? 'true' : 'false');
         
         //get all Recipes
-        foreach(Vzaar\RecipesList::each_item() as $value) {
+        foreach(VzaarApi\RecipesList::each_item() as $value) {
             
             echo PHP_EOL.'List Name : '. $value->name;
             
@@ -72,7 +72,7 @@
          *
          */
         
-        foreach(Vzaar\RecipesList::each_item() as $value) {
+        foreach(VzaarApi\RecipesList::each_item() as $value) {
         
             echo PHP_EOL.'Name : '. $value->name;
         
@@ -80,11 +80,11 @@
         
         echo PHP_EOL;
         
-    }catch(Vzaar\VzaarException $ve){
+    }catch(VzaarApi\VzaarException $ve){
         
         echo $ve->getMessage();
         
-    }catch(Vzaar\VzaarError $verr){
+    }catch(VzaarApi\VzaarError $verr){
         
         echo $verr->getMessage();
         

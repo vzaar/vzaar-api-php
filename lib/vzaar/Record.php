@@ -1,16 +1,16 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Client;
-    use Vzaar\VzaarException;
-    use Vzaar\RecordException;
+    use VzaarApi\Client;
+    use VzaarApi\VzaarException;
+    use VzaarApi\RecordException;
     
     abstract class Record {
         
         
         protected $httpClient;
         
-        protected $endpoint;
+        //protected $endpoint;
         
         protected $recordPath;
         protected $recordQuery;
@@ -22,7 +22,7 @@
             
             $this->httpClient = is_null($client) ? new Client() : $client;
             
-            if(!isset($this->endpoint))
+            if(!isset(static::$endpoint))
                 throw new VzaarError('Endpoint have to be configred.');
             
             $this->recordData = new \stdClass();
@@ -91,7 +91,7 @@
             
             $recordRequest = array();
             $recordRequest['method'] = $method;
-            $recordRequest['endpoint'] =  $this->endpoint;
+            $recordRequest['endpoint'] =  static::$endpoint;
             $recordRequest['recordPath'] =  $this->recordPath;
             $recordRequest['recordQuery'] =  $this->recordQuery;
             $recordRequest['recordData'] =  $this->recordBody;

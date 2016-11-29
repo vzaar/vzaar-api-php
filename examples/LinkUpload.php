@@ -14,18 +14,18 @@
         $params['title'] = 'Link Upload Test';
         $params['uploader'] = 'MyLinkUploader';
         
-        $link = Vzaar\LinkUpload::create($params);
+        $link = VzaarApi\LinkUpload::create($params);
         
         echo PHP_EOL.'Link Upload: id ' . $link->id .' - '. $link->title;
         
         
         echo PHP_EOL;
         
-    }catch(Vzaar\VzaarException $ve){
+    }catch(VzaarApi\VzaarException $ve){
         
         echo $ve->getMessage();
         
-    }catch(Vzaar\VzaarError $verr){
+    }catch(VzaarApi\VzaarError $verr){
         
         echo $verr->getMessage();
         

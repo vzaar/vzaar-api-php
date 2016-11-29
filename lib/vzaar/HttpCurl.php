@@ -1,10 +1,10 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\iHttpChannel;
-    use Vzaar\FunctionArgumentEx;
-    use Vzaar\ConnectionEx;
-    use Vzaar\ArgumentValueEx;
+    use VzaarApi\iHttpChannel;
+    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\ConnectionEx;
+    use VzaarApi\ArgumentValueEx;
     
     class HttpCurl implements iHttpChannel {
         

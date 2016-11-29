@@ -1,19 +1,19 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Record;
-    use Vzaar\Client;
-    use Vzaar\FunctionArgumentEx;
+    use VzaarApi\Record;
+    use VzaarApi\Client;
+    use VzaarApi\FunctionArgumentEx;
 
     class Recipe extends Record {
         
-    
+        protected static $endpoint;
+        
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            //inherited static variable
-            $this->endpoint = '/ingest_recipes';
+            self::$endpoint = '/ingest_recipes';
             
             parent::__construct($client);
             

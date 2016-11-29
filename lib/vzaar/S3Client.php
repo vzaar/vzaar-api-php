@@ -1,12 +1,12 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\iHttpChannel;
-    use Vzaar\Signature;
-    use Vzaar\HttpCurl;
-    use Vzaar\FunctionArgumentEx;
-    use Vzaar\ArgumentValueEx;
-    use Vzaar\S3uploadEx;
+    use VzaarApi\iHttpChannel;
+    use VzaarApi\Signature;
+    use VzaarApi\HttpCurl;
+    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\ArgumentValueEx;
+    use VzaarApi\S3uploadEx;
     
     class S3Client {
         

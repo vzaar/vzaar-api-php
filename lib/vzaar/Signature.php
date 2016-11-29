@@ -1,20 +1,20 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Record;
-    use Vzaar\Client;
-    use Vzaar\FunctionArgumentEx;
-    use Vzaar\ArgumentValueEx;
+    use VzaarApi\Record;
+    use VzaarApi\Client;
+    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\ArgumentValueEx;
     
     class Signature extends Record {
         
+        protected static $endpoint;
         
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            //inherited static variable
-            $this->endpoint = '/signature';
+            self::$endpoint = '/signature';
             
             parent::__construct($client);
 
@@ -23,7 +23,7 @@
         
         protected function createSingle($params) {
 
-            $this->endpoint = '/signature/single';
+            self::$endpoint = '/signature/single';
             
             $this->crudCreate($params);
 
@@ -31,13 +31,16 @@
         
         protected function createMultipart($params) {
             
-            $this->endpoint = '/signature/multipart';
+            self::$endpoint = '/signature/multipart';
             
             $this->crudCreate($params);
                      
         }
         
         protected function createFromFile($filepath) {
+            
+            //i think this should be an array, the uploader needs to be
+            //as a parameter to keep this conisstent with single(), multiple:
             
             if(!file_exists($filepath))
                 throw new ArgumentValueEx('File does not exist: '.$filepath);

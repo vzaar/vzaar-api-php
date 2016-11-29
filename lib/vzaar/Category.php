@@ -1,18 +1,19 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Record;
-    use Vzaar\FunctionArgumentEx;
-    use Vzaar\CategoriesList;
+    use VzaarApi\Record;
+    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\CategoriesList;
 
     class Category extends Record {
+        
+        protected static $endpoint;
     
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            //inherited static variable
-            $this->endpoint = '/categories';
+            self::$endpoint = '/categories';
             
             parent::__construct($client);
 

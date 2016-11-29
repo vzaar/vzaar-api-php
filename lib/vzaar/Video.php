@@ -1,23 +1,23 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Endpoint;
-    use Vzaar\Signature;
-    use Vzaar\Client;
-    use Vzaar\S3Client;
-    use Vzaar\FunctionArgumentEx;
-    use Vzaar\ArgumentValueEx;
-    use Vzaar\LinkUpload;
+    use VzaarApi\Endpoint;
+    use VzaarApi\Signature;
+    use VzaarApi\Client;
+    use VzaarApi\S3Client;
+    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\ArgumentValueEx;
+    use VzaarApi\LinkUpload;
     
     class Video extends Record {
         
+        protected static $endpoint;
         
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            // Inherited variable
-            $this->endpoint = '/videos';
+            self::$endpoint = '/videos';
             
             parent::__construct($client);
 
@@ -108,7 +108,8 @@
             $video = new self($client);
             $result = $video->createData($params);
             
-            if($result instanceof LinkUpload)
+            $linkClass = LinkUpload::class;
+            if($result instanceof $linkClass)
                 return $result; //Video object created with LinkUpload class
             
             return $video;

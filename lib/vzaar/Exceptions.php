@@ -1,5 +1,5 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
     class VzaarException extends \Exception {
     }

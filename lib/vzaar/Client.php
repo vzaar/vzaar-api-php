@@ -1,16 +1,16 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\HttpChannel;
-    use Vzaar\Signature;
-    use Vzaar\iHttpChannel;
-    use Vzaar\HttpCurl;
-    use Vzaar\VzaarException;
+    use VzaarApi\HttpChannel;
+    use VzaarApi\Signature;
+    use VzaarApi\iHttpChannel;
+    use VzaarApi\HttpCurl;
+    use VzaarApi\VzaarException;
     
     class Client {
         
-        public static $id = 'id';
-        public static $token = 'token';
+        public static $client_id = 'id';
+        public static $auth_token = 'token';
         public static $version = 'v2';
         public static $urlAuth = false;
         
@@ -49,8 +49,8 @@
             
             FunctionArgumentEx::assertIsArray($config);
             
-            $this->clientId = isset($config['id']) ? $config['id'] : self::$id;
-            $this->clientAuthToken = isset($config['token']) ? $config['token'] : self::$token;
+            $this->clientId = isset($config['client_id']) ? $config['client_id'] : self::$client_id;
+            $this->clientAuthToken = isset($config['auth_token']) ? $config['auth_token'] : self::$auth_token;
             $this->apiVersion = isset($config['version']) ? $config['version'] : self::$version;
             $this->clientUrlAuth = isset($config['urlAuth']) ? $config['urlAuth'] : self::$urlAuth;
             

@@ -1,22 +1,22 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\RecordList;
-    use Vzaar\Preset;
-    use Vzaar\Client;
-    use Vzaar\FunctionArgumentEx;
+    use VzaarApi\RecordList;
+    use VzaarApi\Preset;
+    use VzaarApi\Client;
+    use VzaarApi\FunctionArgumentEx;
     
     class PresetsList extends RecordList {
+        
+        protected static $endpoint;
+        protected static $recordClass;
         
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            //inherited static variable
-            $this->endpoint = '/encoding_presets';
-
-            //inherited static variable
-            $this->recordClass = Preset::class;
+            self::$endpoint = '/encoding_presets';
+            self::$recordClass = Preset::class;
             
             parent::__construct($client);
         }

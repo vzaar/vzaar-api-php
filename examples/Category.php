@@ -11,7 +11,7 @@
         //no categories defined, Exception is thrown due to 404
         //define category and uncomment the below line, change category ID
         
-        //$category = Vzaar\Category::find(1);
+        //$category = VzaarApi\Category::find(1);
         
         /**
          * Category Subtree Example
@@ -36,7 +36,7 @@
         //no categories defined, exception is thrown due to 404
         //uncomment when category defined
         
-        //$subStatic = Vzaar\CategoriesList::subtree(1);
+        //$subStatic = VzaarApi\CategoriesList::subtree(1);
         
         /**
          * Category List Example
@@ -45,7 +45,7 @@
          *
          */
         
-        foreach(Vzaar\CategoriesList::each_item() as $category) {
+        foreach(VzaarApi\CategoriesList::each_item() as $category) {
         
             if(isset($category->id) & isset($category->name)){
             
@@ -57,11 +57,11 @@
         echo PHP_EOL;
         
     
-    }catch(Vzaar\VzaarException $ve){
+    }catch(VzaarApi\VzaarException $ve){
     
         echo $ve->getMessage();
         
-    }catch(Vzaar\VzaarError $verr){
+    }catch(VzaarApi\VzaarError $verr){
     
         echo $verr->getMessage();
         

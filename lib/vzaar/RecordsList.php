@@ -1,23 +1,21 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Record;
-    use Vzaar\Client;
-    use Vzaar\VzaarException;
+    use VzaarApi\Record;
+    use VzaarApi\Client;
+    use VzaarApi\VzaarException;
     
     abstract class RecordList extends Record implements \Iterator, \Countable{
-        
-        protected $recordClass;
         
         protected $itemCursor;
         protected $pageCursor;
         
         protected function __construct(Client $client = null) {
         
-            if(!isset($this->recordClass))
+            if(!isset(static::$recordClass))
                 throw new VzaarError('Record type have to be configred');
             
-            if(!class_exists($this->recordClass))
+            if(!class_exists(static::$recordClass))
                 throw new VzaarError('Record type class is missing.');
             
             parent::__construct($client);
@@ -36,7 +34,7 @@
             
             foreach($this->recordData->data as $key => $value) {
                 
-                $obj = new $this->recordClass($this->httpClient);
+                $obj = new static::$recordClass($this->httpClient);
                 $obj->setRecord($value);
                 
                 $this->recordData->data[$key] = $obj;

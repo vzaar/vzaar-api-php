@@ -1,20 +1,21 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\Record;
-    use Vzaar\Client;
-    use Vzaar\FunctionArgumentEx;
+    use VzaarApi\Record;
+    use VzaarApi\Client;
+    use VzaarApi\FunctionArgumentEx;
     
     class LinkUpload extends Video {
+        
+        protected static $endpoint;
     
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
-            parent::__construct($client);
+            self::$endpoint = '/link_uploads';
             
-            //inherited static variable
-            $this->endpoint = '/link_uploads';
+            parent::__construct($client);
         
         }
         

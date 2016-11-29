@@ -10,14 +10,14 @@
          *
          */
         
-        $paramsFile = array('filepath' => 'movies/video_1MB.mp4');
+        $paramsFile = array('filepath' => '../movies/video_1MB.mp4');
         $paramsFile['title'] = 'Test Video 1MB';
         
-        $videoFile = Vzaar\Video::create($paramsFile);
+        $videoFile = VzaarApi\Video::create($paramsFile);
         
         echo PHP_EOL.'Create: '. $videoFile->id .'-'. $videoFile->title;
         
-        $lookupFile = Vzaar\Video::find($videoFile->id);
+        $lookupFile = VzaarApi\Video::find($videoFile->id);
         
         echo PHP_EOL.'Lookup: '. $lookupFile->id .'-'. $lookupFile->title;
         
@@ -30,11 +30,11 @@
         $paramsUrl = array('url' => "http://video.blendertestbuilds.de/download.blender.org/peach/trailer_480p.mov");
         $paramsUrl['title'] = 'Test Video URL';
         
-        $videoUrl = Vzaar\Video::create($paramsUrl);
+        $videoUrl = VzaarApi\Video::create($paramsUrl);
         
         echo PHP_EOL.'Url Create: '. $videoUrl->id .'-'. $videoUrl->title;
         
-        $lookupUrl = Vzaar\Video::find($videoUrl->id);
+        $lookupUrl = VzaarApi\Video::find($videoUrl->id);
         
         echo PHP_EOL.'Url Lookup: '. $lookupUrl->id .'-'. $lookupUrl->title;
         
@@ -45,21 +45,21 @@
          *
          */
         $params = array();
-        $filepath = 'movies/video_20MB.mp4';
+        $filepath = '../movies/video_20MB.mp4';
         $params['title'] = 'Test Upload 20MB';
         
-        $signature = Vzaar\Signature::create($filepath);
+        $signature = VzaarApi\Signature::create($filepath);
         
-        $s3 = new Vzaar\S3Client();
+        $s3 = new VzaarApi\S3Client();
         $s3->uploadFile($signature,$filepath);
         
         $params['guid'] = $signature->guid;
         
-        $videoGuid = Vzaar\Video::create($params);
+        $videoGuid = VzaarApi\Video::create($params);
         
         echo PHP_EOL.'Guid Create: '. $videoGuid->id .'-'. $videoGuid->title;
         
-        $lookupGuid = Vzaar\Video::find($videoGuid->id);
+        $lookupGuid = VzaarApi\Video::find($videoGuid->id);
         
         echo PHP_EOL.'Guid Lookup: '. $lookupGuid->id .'-'. $lookupGuid->title;
         
@@ -76,7 +76,7 @@
                             'state' => 'ready');
         
         //this methods gets initial page
-        $list = Vzaar\VideosList::paginate($paramsList);
+        $list = VzaarApi\VideosList::paginate($paramsList);
         
         foreach($list as $video) {
             
@@ -118,25 +118,25 @@
          */
         $paramsList['state'] = 'failed';
         
-        foreach(Vzaar\VideosList::each_item($paramsList) as $video) {
+        foreach(VzaarApi\VideosList::each_item($paramsList) as $video) {
             
             echo PHP_EOL.'Failed List: '. $video->title;
         }
         
         $paramsList['state'] = 'processing';
         
-        foreach(Vzaar\VideosList::each_item($paramsList) as $video) {
+        foreach(VzaarApi\VideosList::each_item($paramsList) as $video) {
             
             echo PHP_EOL.'Processing List: '. $video->title;
         }
         
         echo PHP_EOL;
     
-    } catch(Vzaar\VzaarException $ve) {
+    } catch(VzaarApi\VzaarException $ve) {
         
         echo $ve->getMessage();
     
-    } catch(Vzaar\VzaarError $verr) {
+    } catch(VzaarApi\VzaarError $verr) {
         
         echo $verr->getMessage();
     

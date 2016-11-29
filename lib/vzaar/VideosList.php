@@ -1,23 +1,22 @@
 <?php
-    namespace Vzaar;
+    namespace VzaarApi;
     
-    use Vzaar\RecordList;
-    use Vzaar\Video;
-    use Vzaar\Client;
-    use Vzaar\FunctionArgumentEx;
+    use VzaarApi\RecordList;
+    use VzaarApi\Video;
+    use VzaarApi\Client;
+    use VzaarApi\FunctionArgumentEx;
 
     class VideosList extends RecordList {
 
+        protected static $endpoint;
+        protected static $recordClass;
 
         public function __construct($client = null) {
             
             FunctionArgumentEx::assertInstanceOf(Client::class, $client);
         
-            //inherited static variable
-            $this->endpoint = '/videos';
-            
-            //inherited static variable
-            $this->recordClass = Video::class;
+            self::$endpoint = '/videos';
+            self::$recordClass = Video::class;
             
             parent::__construct($client);
             

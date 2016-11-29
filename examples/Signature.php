@@ -9,9 +9,9 @@
          * create from filepath
          *
          */
-        $filepath = 'movies/video_20MB.mp4';
+        $filepath = '../movies/video_20MB.mp4';
         
-        $sigMultiPath = Vzaar\Signature::create($filepath);
+        $sigMultiPath = VzaarApi\Signature::create($filepath);
         
         echo PHP_EOL. 'From filepath multi - guid: '. $sigMultiPath->guid .' - parts: '. $sigMultiPath->parts;
         
@@ -22,13 +22,13 @@
          *
          */
         $multi = array();
-        $filepath = 'movies/video_20MB.mp4';
+        $filepath = '../movies/video_20MB.mp4';
         
         $multi['filename'] = basename($filepath);
         $multi['filesize'] = filesize($filepath);
         $multi['uploader'] = 'MyUploader';
         
-        $sigMulti = Vzaar\Signature::multipart($multi);
+        $sigMulti = VzaarApi\Signature::multipart($multi);
         
         echo PHP_EOL. 'From params multi - guid: '. $sigMulti->guid .' - parts: '. $sigMulti->parts;
         
@@ -38,9 +38,9 @@
          * create from filepath
          *
          */
-        $filepath = 'movies/video_1MB.mp4';
+        $filepath = '../movies/video_1MB.mp4';
         
-        $sigSinglePath = Vzaar\Signature::create($filepath);
+        $sigSinglePath = VzaarApi\Signature::create($filepath);
         
         echo PHP_EOL. 'From filepath single - guid: '. $sigSinglePath->guid;
         
@@ -54,17 +54,17 @@
 
         $single['uploader'] = 'MyUploader';
         
-        $sigSingle = Vzaar\Signature::single($single);
+        $sigSingle = VzaarApi\Signature::single($single);
         
         echo PHP_EOL. 'From params single - guid: '. $sigSingle->guid;
         
         echo PHP_EOL;
         
-    }catch(Vzaar\VzaarException $ve){
+    }catch(VzaarApi\VzaarException $ve){
         
         echo $ve->getMessage();
         
-    }catch(Vzaar\VzaarError $verr){
+    }catch(VzaarApi\VzaarError $verr){
         
         echo $verr->getMessage();
         
