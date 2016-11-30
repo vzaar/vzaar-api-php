@@ -34,8 +34,8 @@ Configure your API credentials:
 
 ```
 
-Vzaar\Client::$client_id  = '<your-client-id>';
-Vzaar\Client::$auth_token = '<your-auth-token>';
+VzaarApi\Client::$client_id  = '<your-client-id>';
+VzaarApi\Client::$auth_token = '<your-auth-token>';
 ```
 
 Usage instructions and examples are available on [vzaar's documentation site](https://vzaar.readme.io).
