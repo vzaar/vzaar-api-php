@@ -1,12 +1,13 @@
 <?php
-    namespace VzaarApi;
+    namespace VzaarApi\Resources;
     
-    use VzaarApi\iHttpChannel;
+    use VzaarApi\Resources\iHttpChannel;
+    use VzaarApi\Resources\HttpCurl;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentValueEx;
+    use VzaarApi\Exceptions\S3uploadEx;
+    use VzaarApi\Client;
     use VzaarApi\Signature;
-    use VzaarApi\HttpCurl;
-    use VzaarApi\FunctionArgumentEx;
-    use VzaarApi\ArgumentValueEx;
-    use VzaarApi\S3uploadEx;
     
     class S3Client {
         
@@ -19,7 +20,7 @@
             if(is_null($httpHandler)){
                 
                 if (!extension_loaded('curl'))
-                    exit("\nERROR: CURL extension not loaded\n\n");
+                    exit(PHP_EOL. "VZAAR_ERROR: CURL extension not loaded". PHP_EOL);
                 
                 $this->httpHandler = new HttpCurl();
             
@@ -79,29 +80,32 @@
                     $data['chunk'] = $chunk;
                     $data['key'] = $key. '.' .$chunk;
                     
-                    if(self::$VERBOSE) {
-                        
-                        echo PHP_EOL . "MULTIPARTUPLOAD" . PHP_EOL;
-                        var_export($data);
-                    }
-                    
                     $data['file'] = \fread($file,$signature->part_size_in_bytes);
                     
                     $cfg['data'] = $data;
                     
-                    $data['file'] = null;
-                    
-                    
+                    if(self::$VERBOSE) {
+        
+                        //do not show file content in log
+                        $data['file'] = $filepath;
+                        
+                        $log = PHP_EOL. "VZAAR_LOG_START". PHP_EOL;
+                        $log .= PHP_EOL. "*** AWS S3 POST DATA ***". PHP_EOL;
+                        $log .= implode("\r\n", $data). PHP_EOL;
+                        $log .= PHP_EOL. "VZAAR_LOG_END". PHP_EOL;
+                        
+                        error_log($log);
+                    }
+
                     
                     $result = $this->httpHandler->httpRequest($cfg);
                     
                     if($result['httpCode'] == 201) {
                         $chunk++;
                     } else {
-                        fclose($file);
                         
-                        throw new S3uploadEx('Problem occured with file upload.');
-                        //use XMLREADER to get some more details on the error
+                        //throw S3uploadEx
+                        break;
                     }
                 }
                 
@@ -113,22 +117,31 @@
                     
                 } else {
                     
-                    throw new S3uploadEx('Problem occured with file upload.');
-                    //use XMLREADER to get some more details on the error
+                    $msg = PHP_EOL.'Problem occured with file upload to AWS S3.'. PHP_EOL;
+                    $msg .= $result['httpResponse']. PHP_EOL;
+                    
+                    throw new S3uploadEx($msg);
                 }
                 
                 
             } else {
                 
-                if(self::$VERBOSE) {
-                    
-                    echo PHP_EOL . "SINGLE UPLOAD" . PHP_EOL;
-                    var_export($data);
-                }
-                
                 $data['file'] = new \CURLFile($data['file']);
                 
                 $cfg['data'] = $data;
+                
+                if(self::$VERBOSE) {
+                    
+                    //do not show file content in log
+                    $data['file'] = $filepath;
+                    
+                    $log = PHP_EOL. "VZAAR_LOG_START". PHP_EOL;
+                    $log .= PHP_EOL. "*** AWS S3 POST DATA ***". PHP_EOL;
+                    $log .= implode("\r\n", $data). PHP_EOL;
+                    $log .= PHP_EOL. "VZAAR_LOG_END". PHP_EOL;
+                    
+                    error_log($log);
+                }
                 
                 $result = $this->httpHandler->httpRequest($cfg);
                 
@@ -138,8 +151,10 @@
                     
                 } else {
                     
-                    throw new S3uploadEx('Problem occured with file upload.');
-                    //use XMLREADER to get some more details on the error
+                    $msg = PHP_EOL.'Problem occured with file upload to AWS S3.'. PHP_EOL;
+                    $msg .= $result['httpResponse']. PHP_EOL;
+                    
+                    throw new S3uploadEx($msg);
                 }
 
             }

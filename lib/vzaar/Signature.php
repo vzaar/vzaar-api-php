@@ -1,10 +1,10 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\Record;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentValueEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
-    use VzaarApi\ArgumentValueEx;
     
     class Signature extends Record {
         
@@ -20,8 +20,12 @@
 
         }
         
-        
         protected function createSingle($params) {
+            
+            FunctionArgumentEx::assertIsArray($params);
+            
+            if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
+                $params['uploader'] = Client::UPLOADER . Client::VERSION;
 
             self::$endpoint = '/signature/single';
             
@@ -31,6 +35,11 @@
         
         protected function createMultipart($params) {
             
+            FunctionArgumentEx::assertIsArray($params);
+            
+            if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
+                $params['uploader'] = Client::UPLOADER . Client::VERSION;
+            
             self::$endpoint = '/signature/multipart';
             
             $this->crudCreate($params);
@@ -38,9 +47,6 @@
         }
         
         protected function createFromFile($filepath) {
-            
-            //i think this should be an array, the uploader needs to be
-            //as a parameter to keep this conisstent with single(), multiple:
             
             if(!file_exists($filepath))
                 throw new ArgumentValueEx('File does not exist: '.$filepath);
@@ -50,8 +56,6 @@
             
             $request['filename'] = $filename;
             $request['filesize'] = $filesize;
-            $request['uploader'] = Client::UPLOADER . Client::VERSION;
-            
             
             if($filesize >= Client::MULTIPART_MIN_SIZE)
                 $this->createMultipart($request);

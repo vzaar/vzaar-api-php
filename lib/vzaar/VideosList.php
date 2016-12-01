@@ -1,12 +1,12 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\RecordList;
-    use VzaarApi\Video;
+    use VzaarApi\Resources\RecordsList;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\Video;
 
-    class VideosList extends RecordList {
+    class VideosList extends RecordsList {
 
         protected static $endpoint;
         protected static $recordClass;

@@ -1,8 +1,8 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\Record;
-    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\CategoriesList;
 
     class Category extends Record {

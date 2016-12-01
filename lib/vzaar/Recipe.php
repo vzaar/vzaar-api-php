@@ -1,9 +1,9 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\Record;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
 
     class Recipe extends Record {
         

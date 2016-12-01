@@ -1,11 +1,11 @@
 <?php
-    namespace VzaarApi;
+    namespace VzaarApi\Resources;
     
-    use VzaarApi\Record;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Exceptions\RecordEx;
     use VzaarApi\Client;
-    use VzaarApi\VzaarException;
     
-    abstract class RecordList extends Record implements \Iterator, \Countable{
+    abstract class RecordsList extends Record implements \Iterator, \Countable {
         
         protected $itemCursor;
         protected $pageCursor;
@@ -205,7 +205,7 @@
             
         }
         public function __set($name, $value) {
-            VzaarException::isReadonly();
+            RecordEx::isReadonly();
         }
         public function __isset($name) {
             
@@ -215,7 +215,7 @@
         }
         public function __unset($name) {
         
-            VzaarException::isReadonly();
+            RecordEx::isReadonly();
         
         }
     

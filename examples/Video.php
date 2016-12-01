@@ -50,7 +50,7 @@
         
         $signature = VzaarApi\Signature::create($filepath);
         
-        $s3 = new VzaarApi\S3Client();
+        $s3 = new VzaarApi\Resources\S3Client();
         $s3->uploadFile($signature,$filepath);
         
         $params['guid'] = $signature->guid;
@@ -132,11 +132,11 @@
         
         echo PHP_EOL;
     
-    } catch(VzaarApi\VzaarException $ve) {
+    } catch(VzaarApi\Exceptions\VzaarException $ve) {
         
         echo $ve->getMessage();
     
-    } catch(VzaarApi\VzaarError $verr) {
+    } catch(VzaarApi\Exceptions\VzaarError $verr) {
         
         echo $verr->getMessage();
     

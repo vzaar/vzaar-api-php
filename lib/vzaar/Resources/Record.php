@@ -1,16 +1,15 @@
 <?php
-    namespace VzaarApi;
+    namespace VzaarApi\Resources;
     
+    use VzaarApi\Exceptions\VzaarError;
+    use VzaarApi\Exceptions\RecordEx;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\VzaarException;
-    use VzaarApi\RecordException;
     
     abstract class Record {
         
         
         protected $httpClient;
-        
-        //protected $endpoint;
         
         protected $recordPath;
         protected $recordQuery;
@@ -122,7 +121,7 @@
             //json record from read/update/create does have 'data' root property
             
             if(!property_exists($data,'data'))
-                throw new VzaarException("Received data are not valid.");
+                throw new VzaarError("Received data are not valid.");
             
             $this->recordData = $data;
             
@@ -236,12 +235,10 @@
         
         public function __get($name) {
         
-            $value = $this->recordData->data->{$name};
-            
             if(isset($this->recordBody[$name]))
-                $value = $this->recordBody[$name];
+                return $this->recordBody[$name];
             
-            return $value;
+            return $this->recordData->data->{$name};
 
         }
         
@@ -251,7 +248,9 @@
                 if($this->recordData->data->{$name} != $value) {
                     $this->recordBody[$name] = $value;
                     
-                } else { //for cases when data changed, then reverted back to old value
+                } else {
+                    //for cases when data changed, then reverted back to old value
+                    //to remove the argument from parameters to update array
                     
                     unset($this->recordBody[$name]);
                 }

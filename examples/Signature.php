@@ -26,7 +26,6 @@
         
         $multi['filename'] = basename($filepath);
         $multi['filesize'] = filesize($filepath);
-        $multi['uploader'] = 'MyUploader';
         
         $sigMulti = VzaarApi\Signature::multipart($multi);
         
@@ -51,8 +50,6 @@
          *
          */
         $single = array();
-
-        $single['uploader'] = 'MyUploader';
         
         $sigSingle = VzaarApi\Signature::single($single);
         
@@ -60,11 +57,11 @@
         
         echo PHP_EOL;
         
-    }catch(VzaarApi\VzaarException $ve){
+    }catch(VzaarApi\Exceptions\VzaarException $ve){
         
         echo $ve->getMessage();
         
-    }catch(VzaarApi\VzaarError $verr){
+    }catch(VzaarApi\Exceptions\VzaarError $verr){
         
         echo $verr->getMessage();
         

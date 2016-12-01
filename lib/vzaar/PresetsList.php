@@ -1,12 +1,12 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\RecordList;
-    use VzaarApi\Preset;
+    use VzaarApi\Resources\RecordsList;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\Preset;
     
-    class PresetsList extends RecordList {
+    class PresetsList extends RecordsList {
         
         protected static $endpoint;
         protected static $recordClass;

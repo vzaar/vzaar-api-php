@@ -12,8 +12,20 @@ PHP 5.6+
 
 ## Installation
 
+1. Create file named composer.json in your project directory with the below content:
+
 ```
-php composer.json install
+{
+    "require": {
+        "vzaar/vzaar-api-php": "2.*"
+    }
+}
+```
+2. Run the below command from your project directory level.
+If Composer not installed, please follow the [instructions](https://getcomposer.org/doc/00-intro.md).
+
+```
+php composer.phar install
 ```
 
 

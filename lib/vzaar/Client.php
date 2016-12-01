@@ -1,11 +1,10 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\HttpChannel;
-    use VzaarApi\Signature;
-    use VzaarApi\iHttpChannel;
-    use VzaarApi\HttpCurl;
-    use VzaarApi\VzaarException;
+    use VzaarApi\Resources\HttpCurl;
+    use VzaarApi\Resources\iHttpChannel;
+    use VzaarApi\Exceptions\ClientErrorEx;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     
     class Client {
         
@@ -57,7 +56,7 @@
             if(is_null($httpHandler)) {
                 
                 if (!extension_loaded('curl'))
-                    exit("\nERROR: CURL extension not loaded\n\n");
+                    exit(PHP_EOL. "VZAAR_ERROR: CURL extension not loaded". PHP_EOL);
                 
                 $this->httpHandler = new HttpCurl();
             
@@ -120,13 +119,13 @@
         }
         
         /*
-         $request: array
+         $recordRequest: array
          
-         $request['method'] : string
-         $request['endpoint'] : string
-         $request['recordPath'] : array
-         $request['recordQuery'] : array
-         $request['recordData'] : array
+         ['method'] : string
+         ['endpoint'] : string
+         ['recordPath'] : string
+         ['recordQuery'] : array
+         ['recordData'] : array
          */
         
         public function clientSend($recordRequest) {
@@ -156,41 +155,127 @@
             }
             
             if(self::$VERBOSE) {
-            echo "\n";
-            echo "***REQUEST*****";
-            echo $httpRequest['uri'];
-            echo "\n";
-            echo $httpRequest['data'];
-            echo "\n";
+                
+                $log = PHP_EOL. "VZAAR_LOG_START". PHP_EOL;
+                $log .= PHP_EOL."*** REQUEST QUERY ***".PHP_EOL;
+                $log .= $httpRequest['uri'].PHP_EOL;
+                $log .= PHP_EOL."*** REQUEST HEADERS ***".PHP_EOL;
+                $log .= implode("\r\n", $httpRequest['headers']).PHP_EOL;
+                $log .= PHP_EOL."*** REQUEST BODY ***".PHP_EOL;
+                $log .= $httpRequest['data'].PHP_EOL;
+                $log .= PHP_EOL. "VZAAR_LOG_END". PHP_EOL;
+                
+                error_log($log);
             }
-            
-            
-            
-            /*
-             $httpRequest: array
-             
-             $httpRequest['url'] : string
-             $httpRequest['method'] : string
-             $httpRequest['headers'] : array
-             $httpRequest['data'] : string
-             */
             
             $httpResponse = $this->httpHandler->httpRequest($httpRequest);
             
             /*
-             $response : array
+             $httpResponse : array
              
-             $response['httpCode'] : string
-             $response['httpResponse'] : string/json
+             ['httpCode'] : string
+             ['httpResponse'] : string
              */
             
             $result = $this->httpResponse($httpResponse);
             
             /**
-             $result : stdClass or true
+             $result : [stdClass | bool]
+             
+             (the stdClass object is result of json_decode() function,
+             and contains record data received as json in http response body)
+             
+             (bool - is true when record is sucessfuly deleted)
              */
-            
             return $result;
+        }
+        
+        protected function httpResponse($httpResponse) {
+            
+            $split = explode("\r\n\r\n", $httpResponse['httpResponse'], 2);
+            
+            $responseHeaders = $split[0];
+            $responseBody = ''; //initialize as empty string
+            
+            if(isset($split[1]))
+                $responseBody = $split[1];
+            
+            if (strpos($responseHeaders," 100 Continue") !== false ) {
+                
+                $split = explode("\r\n\r\n", $responseBody, 2);
+                
+                $responseHeaders = $split[0];
+                $responseBody = ''; //initialize as empty string
+                
+                if(isset($split[1]))
+                    $responseBody = $split[1];
+                
+            }
+            
+            $this->httpCode =  $httpResponse['httpCode'];
+            $this->httpHeaders = $this->headers2array($responseHeaders);
+            
+            if(self::$VERBOSE) {
+                
+                $log = PHP_EOL. "VZAAR_LOG_START". PHP_EOL;
+                $log .= PHP_EOL."*** RESPONSE HTTP CODE ***".PHP_EOL;
+                $log .= $this->httpCode.PHP_EOL;
+                $log .= PHP_EOL."*** RESPONSE HTTP HEADERS ***".PHP_EOL;
+                $log .= implode("\r\n", $this->array2headers($this->httpHeaders)).PHP_EOL;
+                $log .= PHP_EOL."*** RESPONSE HTTP BODY ***".PHP_EOL;
+                $log .= $responseBody.PHP_EOL;
+                $log .= PHP_EOL. "VZAAR_LOG_END". PHP_EOL;
+                
+                error_log($log);
+            }
+            
+            if($this->httpCode == 200 || //OK
+               $this->httpCode == 201)   //Created
+            {
+                
+                $response = $this->json2object($responseBody);
+                
+                if(!property_exists($response,'data'))
+                    throw new ClientErrorEx('Response data: response not correct');
+                
+            }
+            elseif($this->httpCode == 204) //No Content
+            {
+                if(!empty($responseBody))
+                    throw new ClientErrorEx('No content expected with this request');
+                
+                $response = true;
+                
+            }
+            elseif ($this->httpCode == 400 || //Bad Request
+                    $this->httpCode == 401 || //Unauthorized
+                    $this->httpCode == 403 || //Forbidden
+                    $this->httpCode == 404 || //Not Found
+                    $this->httpCode == 422 || //Unprocessable Entity
+                    $this->httpCode == 429 || //To many Requests
+                    $this->httpCode == 500)   //Server error
+            {
+                
+                $response = $this->json2object($responseBody);
+                
+                if(!property_exists($response,'errors'))
+                    throw new ClientErrorEx('Response data: response not correct'.'\n');
+                
+                $errors = array();
+                foreach($response->errors as $key => $error)
+                {
+                    $errors[] = $error->message .' : '. $error->detail;
+                }
+                
+                throw new ClientErrorEx('HttpCode: '. $this->httpCode .' Details: '. implode('\n',$errors).'\n');
+                
+            }
+            else
+                throw new ClientErrorEx('Unknown response from server. HttpCode: '. $this->httpCode .'\n');
+            
+            
+            return $response;
+            
         }
         
         protected function httpUrl() {
@@ -253,8 +338,9 @@
         }
         
         
-        public function headers2array($headers)
+        protected function headers2array($headers)
         {
+                
             $headers = explode("\r\n", $headers);
             
             $result = array();
@@ -270,86 +356,20 @@
             
         }
         
-        public function httpResponse($httpResponse) {
-            
-            $split = explode("\r\n\r\n", $httpResponse['httpResponse'], 2);
-            
-            $responseHeaders = $split[0];
-            $responseBody = ''; //initialize as empty string
-            
-            if(isset($split[1]))
-                $responseBody = $split[1];
-            
-            if (strpos($responseHeaders," 100 Continue") !== false ) {
+        protected function array2headers($headers)
+        {
+            $result = array();
+            if(is_array($headers)){
                 
-                $split = explode("\r\n\r\n", $responseBody, 2);
-                
-                $responseHeaders = $split[0];
-                $responseBody = ''; //initialize as empty string
-        
-                if(isset($split[1]))
-                    $responseBody = $split[1];
-                
-            }
-            
-            $this->httpCode =  $httpResponse['httpCode'];
-            $this->httpHeaders = $this->headers2array($responseHeaders);
-            
-            if(self::$VERBOSE) {
-            echo "\n";
-            echo "***RESPONSE*****";
-            echo "\n";
-            echo $responseBody;
-            echo "\n";
-            }
-            
-
-            if($this->httpCode == 200 || //OK
-               $this->httpCode == 201)   //Created
-            {
-                
-                $response = $this->json2object($responseBody);
-                
-                if(!property_exists($response,'data'))
-                    throw new ClientErrorEx('Response data: response not correct');
-                
-            }
-            elseif($this->httpCode == 204) //No Content
-            {
-                if(!empty($responseBody))
-                    throw new ClientErrorEx('No content expected with this request');
-                
-                $response = true;
-                
-            }
-            elseif ($this->httpCode == 400 || //Bad Request
-                    $this->httpCode == 401 || //Unauthorized
-                    $this->httpCode == 403 || //Forbidden
-                    $this->httpCode == 404 || //Not Found
-                    $this->httpCode == 422 || //Unprocessable Entity
-                    $this->httpCode == 429)   //To many Requests
-            {
-                
-                $response = $this->json2object($responseBody);
-                
-                if(!property_exists($response,'errors'))
-                    throw new ClientErrorEx('Response data: response not correct');
-                
-                $errors = array();
-                foreach($response->errors as $key => $error)
-                {
-                    $errors[] = $error->message .' : '. $error->detail;
+                foreach($headers as $key=>$value){
+                    
+                    $result[] = $key.': '.$value;
                 }
-                
-                throw new ClientErrorEx('HttpCode: '. $this->httpCode .' Details: '. implode('\n',$errors));
-                
             }
-            else
-                throw new ClientErrorEx('Unknown response from server');
             
+            return $result;
+            
+        }
         
-        return $response;
-        
-    }
 }
 ?>

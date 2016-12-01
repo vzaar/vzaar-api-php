@@ -1,21 +1,25 @@
 <?php
-    require 'vzaar/Exceptions.php';
-    require 'vzaar/iHttpChannel.php';
-    require 'vzaar/Client.php';
-    require 'vzaar/S3Client.php';
-    require 'vzaar/HttpCurl.php';
-    require 'vzaar/Record.php';
-    require 'vzaar/RecordsList.php';
-    require 'vzaar/Video.php';
-    require 'vzaar/VideosList.php';
-    require 'vzaar/Signature.php';
-    require 'vzaar/Recipe.php';
-    require 'vzaar/RecipesList.php';
-    require 'vzaar/Category.php';
-    require 'vzaar/CategoriesList.php';
-    require 'vzaar/Preset.php';
-    require 'vzaar/PresetsList.php';
-    require 'vzaar/LinkUpload.php';
-    
-
+    require dirname(__FILE__) .'/vzaar/Exceptions/VzaarException.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/VzaarError.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/ConnectionEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/ClientErrorEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/FunctionArgumentEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/ArgumentValueEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/RecordEx.php';
+    require dirname(__FILE__) .'/vzaar/Resources/iHttpChannel.php';
+    require dirname(__FILE__) .'/vzaar/Resources/HttpCurl.php';
+    require dirname(__FILE__) .'/vzaar/Resources/S3Client.php';
+    require dirname(__FILE__) .'/vzaar/Resources/Record.php';
+    require dirname(__FILE__) .'/vzaar/Resources/RecordsList.php';
+    require dirname(__FILE__) .'/vzaar/Client.php';
+    require dirname(__FILE__) .'/vzaar/Video.php';
+    require dirname(__FILE__) .'/vzaar/VideosList.php';
+    require dirname(__FILE__) .'/vzaar/Signature.php';
+    require dirname(__FILE__) .'/vzaar/Recipe.php';
+    require dirname(__FILE__) .'/vzaar/RecipesList.php';
+    require dirname(__FILE__) .'/vzaar/Category.php';
+    require dirname(__FILE__) .'/vzaar/CategoriesList.php';
+    require dirname(__FILE__) .'/vzaar/Preset.php';
+    require dirname(__FILE__) .'/vzaar/PresetsList.php';
+    require dirname(__FILE__) .'/vzaar/LinkUpload.php';
 ?>

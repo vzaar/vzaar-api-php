@@ -1,13 +1,14 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\Endpoint;
-    use VzaarApi\Signature;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Resources\S3Client;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentValueEx;
     use VzaarApi\Client;
-    use VzaarApi\S3Client;
-    use VzaarApi\FunctionArgumentEx;
-    use VzaarApi\ArgumentValueEx;
+    use VzaarApi\Signature;
     use VzaarApi\LinkUpload;
+    
     
     class Video extends Record {
         
@@ -63,7 +64,7 @@
         
         protected function urlCreate($params) {
             
-            if(!isset($params['uploader']))
+            if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
                 $params['uploader'] = Client::UPLOADER . Client::VERSION;
             
             return LinkUpload::create($params);

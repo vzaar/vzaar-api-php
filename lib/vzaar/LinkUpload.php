@@ -1,9 +1,9 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\Record;
+    use VzaarApi\Resources\Record;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
     
     class LinkUpload extends Video {
         
@@ -19,10 +19,21 @@
         
         }
         
+        protected function linnkCreate($params) {
+        
+            FunctionArgumentEx::assertIsArray($params);
+            
+            if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
+                $params['uploader'] = Client::UPLOADER . Client::VERSION;
+            
+            $this->crudCreate($params);
+            
+        }
+        
         public static function create($params, $client = null) {
         
             $link = new self($client);
-            $link->crudCreate($params);
+            $link->linnkCreate($params);
             
             return $link;
         

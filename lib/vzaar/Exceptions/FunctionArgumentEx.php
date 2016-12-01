@@ -1,9 +1,9 @@
 <?php
-    namespace VzaarApi;
+    namespace VzaarApi\Exceptions;
     
-    class VzaarException extends \Exception {
-    }
+    use VzaarApi\Exceptions\VzaarException;
     
+    //argument passed to method is not of expected type
     class FunctionArgumentEx extends VzaarException {
         
         public static function assertIsArray($params) {
@@ -22,32 +22,6 @@
             
         }
         
-        public static function isReadonly() {
-            throw new self("The property is readonly");
-        }
-    
     }
     
-    class RecordEx extends VzaarException {
-    }
-    
-    class ArgumentValueEx extends FunctionArgumentEx {
-    }
-    
-    class ConnectionEx extends VzaarException {
-    }
-    
-    class ClientErrorEx extends ConnectionEx {
-    }
-    
-    class S3uploadEx extends ConnectionEx {
-    }
-
-    class VzaarError extends \ErrorException {
-    }
-    
-
-    
-    
-
 ?>

@@ -1,5 +1,5 @@
 <?php
-    namespace VzaarApi;
+    namespace VzaarApi\Resources;
     
     interface iHttpChannel {
     

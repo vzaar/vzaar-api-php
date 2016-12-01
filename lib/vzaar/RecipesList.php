@@ -1,12 +1,12 @@
 <?php
     namespace VzaarApi;
     
-    use VzaarApi\RecordList;
-    use VzaarApi\Recipe;
+    use VzaarApi\Resources\RecordsList;
+    use VzaarApi\Exceptions\FunctionArgumentEx;
     use VzaarApi\Client;
-    use VzaarApi\FunctionArgumentEx;
+    use VzaarApi\Recipe;
     
-    class RecipesList extends RecordList {
+    class RecipesList extends RecordsList {
         
         protected static $endpoint;
         protected static $recordClass;
