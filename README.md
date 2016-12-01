@@ -16,8 +16,8 @@ PHP 5.6+
 
 ```
 {
-    "require": {
-        "vzaar/vzaar-api-php": "2.*"
+    "require-dev": {
+        "vzaar/vzaar-api-php": "2.0.*-dev"
     }
 }
 ```
