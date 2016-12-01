@@ -22,5 +22,10 @@
         "psr-4": {
             "VzaarApi\\": "lib/vzaar/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-version-2.0.0-alpha": "2.0.x-dev"
+        }
     }
 }
