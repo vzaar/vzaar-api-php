@@ -8,13 +8,13 @@ vzaar's PHP client for interacting with version 2 of the [vzaar API](https://vza
 
 ## How to run examples
 
-1. After the package [installation](../README.md) with Composer navigate to a directory where the examples are stored:
+After the package [installation](../README.md) with Composer navigate to a directory where the examples are stored:
 
 ```
 <your-project-directory>/vendor/vzaar/vzaar-api-php/examples
 ```
 
-2. Set system environment variables:
+Set system environment variables:
 
 Example for bash shell:
 
@@ -23,7 +23,7 @@ export VZAAR_CLIENT_ID=<your-client-id>
 export VZAAR_AUTH_TOKEN=<your-auth-token>
 ```
 
-3. Run examples (CLI):
+Run examples (CLI):
 
 ```
 php -f <example-file-name>.php

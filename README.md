@@ -12,7 +12,7 @@ PHP 5.6+
 
 ## Installation
 
-1. Create file named composer.json in your project directory with the below content:
+Create file named composer.json in your project directory with the below content:
 
 ```
 {
@@ -21,7 +21,7 @@ PHP 5.6+
     }
 }
 ```
-2. Run the below command from your project directory level.
+Run the below command from your project directory level.
 If Composer not installed, please follow the [instructions](https://getcomposer.org/doc/00-intro.md).
 
 ```
