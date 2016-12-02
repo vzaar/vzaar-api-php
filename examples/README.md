@@ -1,10 +1,4 @@
-# vzaar API
-
-![vzaar Logo](https://raw.github.com/vzaar/vzaar-api-php/master/vzaar.png)
-
-By [vzaar](http://vzaar.com)
-
-vzaar's PHP client for interacting with version 2 of the [vzaar API](https://vzaar.readme.io/docs).
+# Integration tests
 
 ## How to run examples
 
