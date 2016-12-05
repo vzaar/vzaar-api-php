@@ -1,69 +1,50 @@
 <?php
     require 'autoload.php';
-    
+
+    //
+    // Create Signature: multipart
+    //
     try {
-        
-        /**
-         * Signature Create Multipart Example
-         *
-         * create from filepath
-         *
-         */
-        $filepath = '../movies/video_20MB.mp4';
-        
-        $sigMultiPath = VzaarApi\Signature::create($filepath);
-        
-        echo PHP_EOL. 'From filepath multi - guid: '. $sigMultiPath->guid .' - parts: '. $sigMultiPath->parts;
-        
-        /**
-         * Signature Create Multipart Example
-         *
-         * create from user parameters
-         *
-         */
-        $multi = array();
-        $filepath = '../movies/video_20MB.mp4';
-        
-        $multi['filename'] = basename($filepath);
-        $multi['filesize'] = filesize($filepath);
-        
-        $sigMulti = VzaarApi\Signature::multipart($multi);
-        
-        echo PHP_EOL. 'From params multi - guid: '. $sigMulti->guid .' - parts: '. $sigMulti->parts;
-        
-        /**
-         * Signature Create Single Example
-         *
-         * create from filepath
-         *
-         */
-        $filepath = '../movies/video_1MB.mp4';
-        
-        $sigSinglePath = VzaarApi\Signature::create($filepath);
-        
-        echo PHP_EOL. 'From filepath single - guid: '. $sigSinglePath->guid;
-        
-        /**
-         * Signature Create Single Example
-         *
-         * create from user parameters
-         *
-         */
-        $single = array();
-        
-        $sigSingle = VzaarApi\Signature::single($single);
-        
-        echo PHP_EOL. 'From params single - guid: '. $sigSingle->guid;
-        
-        echo PHP_EOL;
-        
-    }catch(VzaarApi\Exceptions\VzaarException $ve){
-        
-        echo $ve->getMessage();
-        
-    }catch(VzaarApi\Exceptions\VzaarError $verr){
-        
-        echo $verr->getMessage();
-        
+
+      $multi = array();
+      $filepath = './videos/medium.mp4';
+      $multi['filename'] = basename($filepath);
+      $multi['filesize'] = filesize($filepath);
+      $sigMulti = VzaarApi\Signature::multipart($multi);
+      echo PHP_EOL. 'Create Signature (multipart) - guid: '. $sigMulti->guid .' - parts: '. $sigMulti->parts .' - part_size_in_bytes: '. $sigMulti->part_size_in_bytes;
+      echo PHP_EOL;
+
+    } catch(VzaarApi\Exceptions\VzaarException $ve) {
+
+      echo $ve->getMessage();
+
+    } catch(VzaarApi\Exceptions\VzaarError $verr) {
+
+      echo $verr->getMessage();
+
     }
-    ?>
+
+
+    //
+    // Create Signature: single-part
+    //
+    try {
+
+      $single = array();
+      $sigSingle = VzaarApi\Signature::single($single);
+      echo PHP_EOL. 'Create Signature (single-part) - guid: '. $sigSingle->guid;
+
+    } catch(VzaarApi\Exceptions\VzaarException $ve) {
+
+      echo $ve->getMessage();
+
+    } catch(VzaarApi\Exceptions\VzaarError $verr) {
+
+      echo $verr->getMessage();
+
+    }
+
+    echo PHP_EOL;
+
+?>
+
