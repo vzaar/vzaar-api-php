@@ -10,7 +10,7 @@ After the package [installation](../README.md) with Composer navigate to a direc
 
 Set system environment variables:
 
-Example for bash shell:
+If you use bash shell:
 
 ```
 export VZAAR_CLIENT_ID=<your-client-id>
@@ -18,6 +18,7 @@ export VZAAR_AUTH_TOKEN=<your-auth-token>
 ```
 
 Run examples (CLI):
+(NOTE: if credentials missing during examples run, please check if 'variables_order' variable in your php.ini file allows ENV super global to be registered)
 
 ```
 php -f <example-file-name>.php
