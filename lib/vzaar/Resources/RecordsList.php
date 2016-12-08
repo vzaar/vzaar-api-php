@@ -8,15 +8,14 @@
     abstract class RecordsList extends Record implements \Iterator, \Countable {
         
         protected $itemCursor;
-        protected $pageCursor;
         
-        protected function __construct(Client $client = null) {
+        protected function __construct($client = null) {
         
             if(!isset(static::$recordClass))
                 throw new VzaarError('Record type have to be configred');
             
             if(!class_exists(static::$recordClass))
-                throw new VzaarError('Record type class is missing.');
+                throw new VzaarError('Record type class is missing');
             
             parent::__construct($client);
             
@@ -35,7 +34,9 @@
             foreach($this->recordData->data as $key => $value) {
                 
                 $obj = new static::$recordClass($this->httpClient);
-                $obj->setRecord($value);
+                $json_obj = new \stdClass();
+                $json_obj->data = $value;
+                $obj->updateRecord($json_obj);
                 
                 $this->recordData->data[$key] = $obj;
             }
@@ -116,9 +117,17 @@
         
         protected function getPage($url) {
             
-            $params = \parse_url($url, PHP_URL_QUERY);
+            $queryString = \parse_url($url, PHP_URL_QUERY);
+            $queryParams = \explode('&', $queryString);
             
-            $this->crudRead('?'.$params);
+            $query = array();
+            foreach($queryParams as $value) {
+                
+                if (preg_match('/(.+)=(.*)/', $value, $items) === 1)
+                    $query[$items[1]] = $items[2];
+            }
+            
+            $this->crudRead(null, $query);
         
         }
         
@@ -194,25 +203,28 @@
         
         public function __get($name) {
             
-            $value = null;
-            
             if(isset($this->recordData->meta->links->{$name}))
                 $value = $this->recordData->meta->links->{$name};
-            elseif(isset($this->recordData->meta->{$name}))
+            else
                 $value = $this->recordData->meta->{$name};
         
             return $value;
             
         }
+        
         public function __set($name, $value) {
+            
             RecordEx::isReadonly();
+        
         }
+        
         public function __isset($name) {
             
             return (isset($this->recordData->meta->links->{$name}) |
                     isset($this->recordData->meta->{$name}));
 
         }
+        
         public function __unset($name) {
         
             RecordEx::isReadonly();

@@ -11,8 +11,6 @@
         
         public function __construct($client = null) {
             
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
-            
             self::$endpoint = '/ingest_recipes';
             
             parent::__construct($client);

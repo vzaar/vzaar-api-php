@@ -12,8 +12,6 @@
         protected static $recordClass;
 
         public function __construct($client = null) {
-            
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
         
             self::$endpoint = '/videos';
             self::$recordClass = Video::class;

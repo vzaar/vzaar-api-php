@@ -12,20 +12,23 @@
         
         public function __construct($client = null) {
             
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
-            
             self::$endpoint = '/signature';
             
             parent::__construct($client);
 
         }
         
-        protected function createSingle($params) {
+        protected function createSingle($params = null) {
             
             FunctionArgumentEx::assertIsArray($params);
             
-            if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
-                $params['uploader'] = Client::UPLOADER . Client::VERSION;
+            if(!is_null($params)) {
+                
+                if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
+                    $params['uploader'] = Client::UPLOADER . Client::VERSION;
+                
+            } else
+                    $params['uploader'] = Client::UPLOADER . Client::VERSION;
 
             self::$endpoint = '/signature/single';
             

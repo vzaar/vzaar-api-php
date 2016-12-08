@@ -35,10 +35,11 @@
         protected $httpHeaders = null;
         
         /**
-         * @param array $config
-         * ['id'] string
-         * ['token'] string
-         * ['version'] string
+         * @param $config : array
+         * ['client_id'] : string
+         * ['auth_token'] : string
+         * ['version'] : string
+         * ['urlAuth'] : bool
          *
          * @param iHttpChannel $httpClient
          *
@@ -62,11 +63,36 @@
             
             } else {
                 
-                FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
+                if(!is_null($httpHandler))
+                    FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
                 
                 $this->httpHandler = $httpHandler;
            
             }
+            
+        }
+        
+        public function getClientId() {
+        
+            return $this->clientId;
+            
+        }
+        
+        public function getAuthToken() {
+            
+            return $this->clientAuthToken;
+            
+        }
+        
+        public function getApiVersion() {
+            
+            return $this->apiVersion;
+            
+        }
+        
+        public function checkUrlAuth() {
+            
+            return $this->clientUrlAuth;
             
         }
         
@@ -100,24 +126,6 @@
             
         }
         
-        public function checkDeprecated() {
-            
-            $value = false;
-            if(isset($this->httpHeaders['X-vzaar-Deprecated']))
-                $value = true;
-            
-            return $value;
-        }
-        
-        public function checkSunsetDate() {
-            
-            $value = null;
-            if(isset($this->httpHeaders['X-vzaar-Sunset-Date']))
-                $value = $this->httpHeaders['X-vzaar-Sunset-Date'];
-            
-            return $value;
-        }
-        
         /*
          $recordRequest: array
          
@@ -130,10 +138,12 @@
         
         public function clientSend($recordRequest) {
             
+            $httpRequest = array();
+            
             $httpRequest['method'] = $recordRequest['method'];
             
-            
-            if($this->clientUrlAuth)
+            $httpRequest['headers'] = array();
+            if($this->clientUrlAuth === true)
                 $recordRequest['recordQuery'] = $this->addAuthUri($recordRequest['recordQuery']);
             else
                 $httpRequest['headers'] = $this->addAuthHeaders();
@@ -144,7 +154,7 @@
                                                     $recordRequest['recordPath'],
                                                     $recordRequest['recordQuery']);
             
-            $httpRequest['data'] = null;
+            $httpRequest['data'] = '';
             if(!empty($recordRequest['recordData'])) {
                 
                 $httpRequest['data'] = $this->object2json($recordRequest['recordData']);
@@ -235,14 +245,11 @@
                 
                 $response = $this->json2object($responseBody);
                 
-                if(!property_exists($response,'data'))
-                    throw new ClientErrorEx('Response data: response not correct');
-                
             }
             elseif($this->httpCode == 204) //No Content
             {
                 if(!empty($responseBody))
-                    throw new ClientErrorEx('No content expected with this request');
+                    throw new ClientErrorEx('No content expected with this response');
                 
                 $response = true;
                 
@@ -259,7 +266,7 @@
                 $response = $this->json2object($responseBody);
                 
                 if(!property_exists($response,'errors'))
-                    throw new ClientErrorEx('Response data: response not correct'.'\n');
+                    throw new ClientErrorEx('Response data: response not correct');
                 
                 $errors = array();
                 foreach($response->errors as $key => $error)
@@ -267,11 +274,12 @@
                     $errors[] = $error->message .' : '. $error->detail;
                 }
                 
-                throw new ClientErrorEx('HttpCode: '. $this->httpCode .' Details: '. implode('\n',$errors).'\n');
+                throw new ClientErrorEx('HttpCode: '. $this->httpCode .' Details: '. implode("\n",$errors));
                 
             }
             else
-                throw new ClientErrorEx('Unknown response from server. HttpCode: '. $this->httpCode .'\n');
+                throw new ClientErrorEx('Unknown response from server. HttpCode: '.
+                                        (isset($this->httpCode) ? $this->httpCode : 'Unknown'));
             
             
             return $response;
@@ -310,6 +318,9 @@
             if(is_array($obj))
                 return json_encode($obj);
             
+            if(json_last_error() != \JSON_ERROR_NONE)
+                throw new ClientErrorEx('Request data: JSON encoding failed - '. json_last_error_msg());
+            
         }
         
         protected function json2object($json) {
@@ -317,7 +328,16 @@
             $obj = json_decode($json);
             
             if(json_last_error() != \JSON_ERROR_NONE)
-                throw new ClientErrorEx(json_last_error_msg());
+                throw new ClientErrorEx('Response data: JSON not valid - '. json_last_error_msg());
+            
+            
+            /*
+                Bug#68938: https://bugs.php.net/bug.php?id=68938
+                
+                Issue fixed in PHP7
+             */
+            if(empty($obj))
+                throw new ClientErrorEx('Response data: JSON not valid - Syntax error');
             
             return $obj;
             

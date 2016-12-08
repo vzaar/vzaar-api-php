@@ -25,7 +25,9 @@
                 $this->httpHandler = new HttpCurl();
             
             }else {
-                FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
+                
+                if(!is_null($httpHandler))
+                    FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
                 
                 $this->httpHandler = $httpHandler;
             }

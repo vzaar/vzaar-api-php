@@ -13,8 +13,6 @@
         
         public function __construct($client = null) {
             
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
-            
             self::$endpoint = '/encoding_presets';
             self::$recordClass = Preset::class;
             

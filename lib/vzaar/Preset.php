@@ -11,8 +11,6 @@
         
         public function __construct($client = null) {
             
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
-            
             self::$endpoint = '/encoding_presets';
             
             parent::__construct($client);

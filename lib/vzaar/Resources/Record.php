@@ -17,15 +17,17 @@
         protected $recordData;
         
         
-        protected function __construct(Client $client = null){
+        protected function __construct($client = null){
+            
+            if(!is_null($client))
+                FunctionArgumentEx::assertInstanceOf(Client::class, $client);
             
             $this->httpClient = is_null($client) ? new Client() : $client;
             
             if(!isset(static::$endpoint))
-                throw new VzaarError('Endpoint have to be configred.');
+                throw new VzaarError('Endpoint have to be configred');
             
-            $this->recordData = new \stdClass();
-            $this->recordData->data = new \stdClass();
+            $this->recordData = \json_decode('{"data":{}}');
             
             $this->recordBody = array();
             $this->recordQuery = array();
@@ -68,16 +70,6 @@
             return $this->httpClient->checkRateReset();
             
         }
-        
-        public function checkDeprecated() {
-            
-            return $this->httpClient->checkDeprecated();
-        }
-        
-        public function checkSunsetDate() {
-            
-            return $this->httpClient->checkSunsetDate();
-        }
 
         
         /**
@@ -107,21 +99,13 @@
             
         }
         
-        protected function setRecord($data) {
-            
-            FunctionArgumentEx::assertInstanceOf(\stdClass::class, $data);
-            
-            //json record from "list" does not have 'data' root property
-            
-            $this->recordData->data = $data;
-        }
         
         protected function updateRecord($data) {
             
-            //json record from read/update/create does have 'data' root property
+            FunctionArgumentEx::assertInstanceOf(\stdClass::class, $data);
             
             if(!property_exists($data,'data'))
-                throw new VzaarError("Received data are not valid.");
+                throw new VzaarError("Received data are not valid");
             
             $this->recordData = $data;
             
@@ -184,6 +168,11 @@
             $this->assertRecordValid();
             $this->recordPath = $this->id;
             
+            //unset the 'id' if set as object property
+            //the data become now resource path
+            //this prevents 'id' from being sent as body parameter
+            unset($this->recordBody['id']);
+            
             if(!is_null($params)){
                 
                 FunctionArgumentEx::assertIsArray($params);
@@ -195,10 +184,13 @@
                 
             }
             
-            $httpMethod = 'PATCH';
-            $result = $this->requestClient($httpMethod);
-            
-            $this->updateRecord($result);
+            if(!empty($this->recordBody)) {
+                
+                $httpMethod = 'PATCH';
+                $result = $this->requestClient($httpMethod);
+                
+                $this->updateRecord($result);
+            }
             
         }
         
@@ -206,6 +198,10 @@
             
             $this->assertRecordValid();
             $this->recordPath = $this->id;
+            
+            //clear the array, in case any object properties
+            //were modified before the delete
+            $this->recordBody = array();
             
             $httpMethod = 'DELETE';
             $this->requestClient($httpMethod);

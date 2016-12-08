@@ -11,8 +11,6 @@
     
         public function __construct($client = null) {
             
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
-            
             self::$endpoint = '/categories';
             
             parent::__construct($client);
@@ -23,7 +21,7 @@
 
             $this->assertRecordValid();
         
-            return CategoriesList::subtree($this->id, $params);
+            return CategoriesList::subtree($this->id, $params, $this->httpClient);
 
         }
         

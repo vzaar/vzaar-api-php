@@ -9,17 +9,15 @@
         
         protected static $endpoint;
     
-        public function __construct($client = null) {
-            
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
+        public function __construct($client = null, $s3client = null) {
             
             self::$endpoint = '/link_uploads';
             
-            parent::__construct($client);
+            parent::__construct($client, $s3client);
         
         }
         
-        protected function linnkCreate($params) {
+        protected function linkCreate($params) {
         
             FunctionArgumentEx::assertIsArray($params);
             
@@ -30,10 +28,10 @@
             
         }
         
-        public static function create($params, $client = null) {
+        public static function create($params, $client = null, $s3client = null) {
         
-            $link = new self($client);
-            $link->linnkCreate($params);
+            $link = new self($client, $s3client);
+            $link->linkCreate($params);
             
             return $link;
         

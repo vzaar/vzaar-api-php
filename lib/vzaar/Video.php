@@ -14,13 +14,18 @@
         
         protected static $endpoint;
         
-        public function __construct($client = null) {
-            
-            FunctionArgumentEx::assertInstanceOf(Client::class, $client);
+        protected $s3client;
+        
+        public function __construct($client = null, $s3client = null) {
             
             self::$endpoint = '/videos';
             
             parent::__construct($client);
+            
+            if(!is_null($s3client))
+                FunctionArgumentEx::assertInstanceOf(S3Client::class, $s3client);
+            
+            $this->s3client = is_null($s3client) ? new S3Client() : $s3client;
 
         }
         
@@ -67,7 +72,7 @@
             if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
                 $params['uploader'] = Client::UPLOADER . Client::VERSION;
             
-            return LinkUpload::create($params);
+            return LinkUpload::create($params,$this->httpClient);
 
         }
         
@@ -77,11 +82,10 @@
                 throw new ArgumentValueEx('File does not exist: '.$params['filepath']);
             
             //create signature
-            $signature = Signature::create($params['filepath']);
+            $signature = Signature::create($params['filepath'],$this->httpClient);
         
             //upload file
-            $s3client = new S3Client();
-            $s3client->uploadFile($signature,$params['filepath']);
+            $this->s3client->uploadFile($signature,$params['filepath']);
 
             //create video from guid
             unset($params['filepath']);
@@ -104,9 +108,9 @@
             
         }
         
-        public static function create($params, $client = null) {
+        public static function create($params, $client = null, $s3client = null) {
             
-            $video = new self($client);
+            $video = new self($client, $s3client);
             $result = $video->createData($params);
             
             $linkClass = LinkUpload::class;

@@ -8,7 +8,13 @@
     
     class HttpCurl implements iHttpChannel {
         
-        public static $VERBOSE = false;
+        public static $CURLOPT_VERBOSE = false;
+        
+        public static $CURLOPT_CAINFO = false;
+        public static $CURLOPT_SSL_VERIFYPEER = true;
+        public static $CURLOPT_SSL_VERIFYHOST = 2;
+        
+        public static $CURLOPT_CONNECTTIMEOUT = false;
     
         /**
          * @param array
@@ -29,9 +35,9 @@
             FunctionArgumentEx::assertIsArray($cfg);
         
             $method = isset($cfg['method']) ? $cfg['method'] : null;
-            $headers = isset($cfg['headers']) ? $cfg['headers'] : null;
+            $headers = isset($cfg['headers']) ? $cfg['headers'] : array();
             $uri = isset($cfg['uri']) ? $cfg['uri'] : null;
-            $data = isset($cfg['data']) ? $cfg['data'] : null;
+            $data = isset($cfg['data']) ? $cfg['data'] : '';
             
             $options = array();
             
@@ -42,13 +48,13 @@
                 case 'POST':
                     $options[CURLOPT_POST] = true;
                     
-                    if(!is_null($data))
+                    if(!empty($data))
                         $options[CURLOPT_POSTFIELDS] = $data;
                     break;
                 case 'PATCH':
                     $options[CURLOPT_CUSTOMREQUEST] = "PATCH";
                     
-                    if(!is_null($data))
+                    if(!empty($data))
                         $options[CURLOPT_POSTFIELDS] = $data;
                     break;
                 case 'DELETE':
@@ -62,16 +68,25 @@
             $options[CURLOPT_URL] = $uri;
             
             $options[CURLOPT_HEADER] = true;
-            $options[CURLOPT_HTTPHEADER] = $headers;
+            
+            if(!empty($headers))
+                $options[CURLOPT_HTTPHEADER] = $headers;
+            
             $options[CURLOPT_RETURNTRANSFER] = true;
+            
+            if(self::$CURLOPT_CONNECTTIMEOUT !== false)
+                $options[CURLOPT_CONNECTTIMEOUT] = self::$CURLOPT_CONNECTTIMEOUT;
             
             $options[CURLOPT_FORBID_REUSE] = true;
             $options[CURLOPT_FRESH_CONNECT] = true;
             
-            $options[CURLOPT_SSL_VERIFYPEER] = false;
-            $options[CURLOPT_SSL_VERIFYHOST] = false;
+            if(self::$CURLOPT_CAINFO !== false)
+                $options[CURLOPT_CAINFO] = self::$CURLOPT_CAINFO;
+
+            $options[CURLOPT_SSL_VERIFYPEER] = self::$CURLOPT_SSL_VERIFYPEER;
+            $options[CURLOPT_SSL_VERIFYHOST] = self::$CURLOPT_SSL_VERIFYHOST;
             
-            $options[CURLOPT_VERBOSE] = self::$VERBOSE;
+            $options[CURLOPT_VERBOSE] = self::$CURLOPT_VERBOSE;
             
             
             $cs = curl_init();
