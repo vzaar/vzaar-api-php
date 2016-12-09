@@ -27,9 +27,13 @@
             
             parent::updateRecord($data);
             
-            //after the 'parent::updateRecord' is executed
-            //the 'recordData' have dynamically defined
-            //properties: 'data' and 'meta'
+            /*
+             
+             after the 'parent::updateRecord' is executed
+             the 'recordData' have dynamically defined
+             properties: 'data' and 'meta'
+            
+             */
             
             foreach($this->recordData->data as $key => $value) {
                 
@@ -42,24 +46,18 @@
             }
         }
         
-        /**
-         *
-         *
-         * abstract public int Countable::count ( void )
-         *
+
+        /*
+         
+         abstract public int Countable::count ( void )
+        
          */
-        public function count() {
+         public function count() {
             
             return \count($this->recordData->data);
         
         }
         
-        /**
-         *
-         *
-         * public user methods
-         *
-         */
         public function firstPage() {
         
             if(isset($this->first)) {
@@ -132,11 +130,6 @@
         }
         
         
-        /**
-         *
-         * Class level methods
-         *
-         */
         public static function paginate($params = null, $client = null) {
             
             $list = new static($client);
@@ -160,10 +153,10 @@
             while($list->nextPage());
         }
         
-        /**
-         *
-         * Array Iterator inteface implementation (for current page iteration)
-         *
+        /*
+         
+         Array Iterator
+        
          */
         
         public function rewind() {
@@ -194,11 +187,10 @@
             ++$this->itemCursor;
         }
 
-        
-        /**
-         *
-         * Property Overloading
-         *
+        /* 
+         
+         magic methods
+         
          */
         
         public function __get($name) {

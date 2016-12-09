@@ -2,7 +2,7 @@
     namespace VzaarApi;
     
     use VzaarApi\Resources\Record;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Client;
     
     class LinkUpload extends Video {
@@ -19,7 +19,7 @@
         
         protected function linkCreate($params) {
         
-            FunctionArgumentEx::assertIsArray($params);
+            ArgumentTypeEx::assertIsArray($params);
             
             if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
                 $params['uploader'] = Client::UPLOADER . Client::VERSION;

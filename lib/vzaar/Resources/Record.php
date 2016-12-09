@@ -3,7 +3,7 @@
     
     use VzaarApi\Exceptions\VzaarError;
     use VzaarApi\Exceptions\RecordEx;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Client;
     
     abstract class Record {
@@ -20,7 +20,7 @@
         protected function __construct($client = null){
             
             if(!is_null($client))
-                FunctionArgumentEx::assertInstanceOf(Client::class, $client);
+                ArgumentTypeEx::assertInstanceOf(Client::class, $client);
             
             $this->httpClient = is_null($client) ? new Client() : $client;
             
@@ -35,12 +35,6 @@
             
             
         }
-        
-        /**
-         *
-         *
-         *
-         */
         
         public function getClient() {
             
@@ -70,13 +64,6 @@
             return $this->httpClient->checkRateReset();
             
         }
-
-        
-        /**
-         *
-         *
-         *
-         */
         
         protected function requestClient($method) {
             
@@ -102,7 +89,7 @@
         
         protected function updateRecord($data) {
             
-            FunctionArgumentEx::assertInstanceOf(\stdClass::class, $data);
+            ArgumentTypeEx::assertInstanceOf(\stdClass::class, $data);
             
             if(!property_exists($data,'data'))
                 throw new VzaarError("Received data are not valid");
@@ -118,18 +105,18 @@
             
         }
         
-        
-        /**
          
-         The CRUD object functions will be exposed by overrided by inheritance
-         
-         */
+         /*
+          
+          The CRUD object functions will be exposed by overrided by inheritance
+
+          */
         
         protected function crudCreate($params = null) {
             
             if(!is_null($params)){
                 
-                FunctionArgumentEx::assertIsArray($params);
+                ArgumentTypeEx::assertIsArray($params);
                 
                 $this->recordBody = $params;
                 
@@ -149,7 +136,7 @@
             
             if(!is_null($params)){
                 
-                FunctionArgumentEx::assertIsArray($params);
+                ArgumentTypeEx::assertIsArray($params);
                 
                 $this->recordQuery = $params;
             }
@@ -168,18 +155,24 @@
             $this->assertRecordValid();
             $this->recordPath = $this->id;
             
-            //unset the 'id' if set as object property
-            //the data become now resource path
-            //this prevents 'id' from being sent as body parameter
+            /*
+             unset the 'id' if set as object property
+             the data become now resource path
+             this prevents 'id' from being sent as body parameter
+             */
             unset($this->recordBody['id']);
             
             if(!is_null($params)){
                 
-                FunctionArgumentEx::assertIsArray($params);
+                ArgumentTypeEx::assertIsArray($params);
+               
+                /*
                 
-                // any attributes chaged as object property
-                // will be overwritten with the parameters
-                // if given in the argument list
+                any attributes chaged as object property
+                will be overwritten with the parameters
+                if given in the argument list
+                 
+                 */
                 $this->recordBody = $params;
                 
             }
@@ -199,9 +192,13 @@
             $this->assertRecordValid();
             $this->recordPath = $this->id;
             
-            //clear the array, in case any object properties
-            //were modified before the delete
-            $this->recordBody = array();
+            /*
+            
+             clear the array, in case any object properties
+             were modified before the delete
+            
+             */
+             $this->recordBody = array();
             
             $httpMethod = 'DELETE';
             $this->requestClient($httpMethod);
@@ -210,12 +207,6 @@
             
         }
         
-        /**
-         *
-         * assertions
-         *
-         */
-        
         protected function assertRecordValid(){
             
             if(!isset($this->id))
@@ -223,10 +214,10 @@
             
         }
         
-        /**
-         *
-         * __set, __get, __isset, __unset overloading
-         *
+        /*
+         
+         magic methods
+        
          */
         
         public function __get($name) {
@@ -245,9 +236,12 @@
                     $this->recordBody[$name] = $value;
                     
                 } else {
-                    //for cases when data changed, then reverted back to old value
-                    //to remove the argument from parameters to update array
+                    /*
+                     
+                     for cases when after data changed, then reverted back to old value
+                     remove the argument from parameters to update
                     
+                     */
                     unset($this->recordBody[$name]);
                 }
             } else {

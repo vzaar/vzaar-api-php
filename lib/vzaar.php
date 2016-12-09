@@ -3,8 +3,9 @@
     require dirname(__FILE__) .'/vzaar/Exceptions/VzaarError.php';
     require dirname(__FILE__) .'/vzaar/Exceptions/ConnectionEx.php';
     require dirname(__FILE__) .'/vzaar/Exceptions/ClientErrorEx.php';
-    require dirname(__FILE__) .'/vzaar/Exceptions/FunctionArgumentEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/ArgumentTypeEx.php';
     require dirname(__FILE__) .'/vzaar/Exceptions/ArgumentValueEx.php';
+    require dirname(__FILE__) .'/vzaar/Exceptions/S3uploadEx.php';
     require dirname(__FILE__) .'/vzaar/Exceptions/RecordEx.php';
     require dirname(__FILE__) .'/vzaar/Resources/iHttpChannel.php';
     require dirname(__FILE__) .'/vzaar/Resources/HttpCurl.php';

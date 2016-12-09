@@ -3,14 +3,18 @@
     
     use VzaarApi\Exceptions\VzaarException;
     
-    //argument passed to method is not of expected type
-    class FunctionArgumentEx extends VzaarException {
+    /*
+     
+     Thrown when argument passed to method is not of expected type
+     
+     */
+    
+    class ArgumentTypeEx extends VzaarException {
         
         public static function assertIsArray($params) {
             
-            if(!is_null($params))
-                if(!is_array($params))
-                    throw new self("Parameter shoud be an array");
+            if(!is_array($params))
+                throw new self("Parameter should be an array");
             
         }
         

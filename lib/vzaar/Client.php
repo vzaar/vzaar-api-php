@@ -4,7 +4,7 @@
     use VzaarApi\Resources\HttpCurl;
     use VzaarApi\Resources\iHttpChannel;
     use VzaarApi\Exceptions\ClientErrorEx;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     
     class Client {
         
@@ -47,7 +47,8 @@
         public function __construct($config = null,
                                     $httpHandler = null) {
             
-            FunctionArgumentEx::assertIsArray($config);
+            if(!is_null($config))
+                ArgumentTypeEx::assertIsArray($config);
             
             $this->clientId = isset($config['client_id']) ? $config['client_id'] : self::$client_id;
             $this->clientAuthToken = isset($config['auth_token']) ? $config['auth_token'] : self::$auth_token;
@@ -63,8 +64,7 @@
             
             } else {
                 
-                if(!is_null($httpHandler))
-                    FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
+                ArgumentTypeEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
                 
                 $this->httpHandler = $httpHandler;
            

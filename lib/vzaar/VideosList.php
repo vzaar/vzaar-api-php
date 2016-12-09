@@ -2,7 +2,7 @@
     namespace VzaarApi;
     
     use VzaarApi\Resources\RecordsList;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Client;
     use VzaarApi\Video;
 

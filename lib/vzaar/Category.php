@@ -2,7 +2,7 @@
     namespace VzaarApi;
     
     use VzaarApi\Resources\Record;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\CategoriesList;
 
     class Category extends Record {

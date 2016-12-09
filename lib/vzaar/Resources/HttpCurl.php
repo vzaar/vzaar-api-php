@@ -2,7 +2,7 @@
     namespace VzaarApi\Resources;
     
     use VzaarApi\Resources\iHttpChannel;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Exceptions\ArgumentValueEx;
     use VzaarApi\Exceptions\ConnectionEx;
     
@@ -32,7 +32,7 @@
          */
         public function httpRequest($cfg){
             
-            FunctionArgumentEx::assertIsArray($cfg);
+            ArgumentTypeEx::assertIsArray($cfg);
         
             $method = isset($cfg['method']) ? $cfg['method'] : null;
             $headers = isset($cfg['headers']) ? $cfg['headers'] : array();
@@ -61,7 +61,7 @@
                     $options[CURLOPT_CUSTOMREQUEST] = "DELETE";
                     break;
                 default:
-                    throw new ArgumentValueEx("Http method missing.");
+                    throw new ArgumentValueEx("Http method missing");
             }
             
             

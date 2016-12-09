@@ -3,7 +3,12 @@
     
     use VzaarApi\Exceptions\VzaarException;
     
-    //record data not valid or corrupted
+    /*
+     
+     Thrown when record data not valid or corrupted
+    
+     */
+    
     class RecordEx extends VzaarException {
         
         public static function isReadonly() {

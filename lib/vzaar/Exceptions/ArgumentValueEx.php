@@ -1,10 +1,15 @@
 <?php
     namespace VzaarApi\Exceptions;
     
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     
-    //value passed in argument is not correct
-    class ArgumentValueEx extends FunctionArgumentEx {
+    /*
+     
+     Thrown when value passed in argument is not correct
+     
+     */
+    
+    class ArgumentValueEx extends ArgumentTypeEx {
         
     }
 ?>

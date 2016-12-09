@@ -1,7 +1,12 @@
 <?php
     namespace VzaarApi\Exceptions;
     
-    //error when creating objects - extending class ot correct
+    /*
+     
+     Thrown when creating object (extending class not correctly implemented)
+    
+     */
+    
     class VzaarError extends \ErrorException {
         
     }

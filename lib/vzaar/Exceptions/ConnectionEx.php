@@ -3,7 +3,12 @@
     
     use VzaarApi\Exceptions\VzaarException;
     
-    //http connection problem
+    /*
+    
+     Thrown on http connection problem
+    
+     */
+    
     class ConnectionEx extends VzaarException {
         
     }

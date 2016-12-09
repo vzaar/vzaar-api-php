@@ -2,7 +2,7 @@
     namespace VzaarApi;
     
     use VzaarApi\Resources\Record;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Exceptions\ArgumentValueEx;
     use VzaarApi\Client;
     
@@ -20,9 +20,9 @@
         
         protected function createSingle($params = null) {
             
-            FunctionArgumentEx::assertIsArray($params);
-            
             if(!is_null($params)) {
+                
+                ArgumentTypeEx::assertIsArray($params);
                 
                 if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
                     $params['uploader'] = Client::UPLOADER . Client::VERSION;
@@ -38,7 +38,8 @@
         
         protected function createMultipart($params) {
             
-            FunctionArgumentEx::assertIsArray($params);
+            if(!is_null($params))
+                ArgumentTypeEx::assertIsArray($params);
             
             if(!array_key_exists('uploader', array_change_key_case($params, CASE_LOWER)))
                 $params['uploader'] = Client::UPLOADER . Client::VERSION;

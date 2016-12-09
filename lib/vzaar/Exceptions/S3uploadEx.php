@@ -3,7 +3,12 @@
     
     use VzaarApi\Exceptions\ConnectionEx;
     
-    //AWS 3S upload failed
+    /*
+     
+     Thrown when AWS 3S upload fails
+    
+     */
+    
     class S3uploadEx extends ConnectionEx {
         
     }

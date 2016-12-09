@@ -3,7 +3,7 @@
     
     use VzaarApi\Resources\iHttpChannel;
     use VzaarApi\Resources\HttpCurl;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Exceptions\ArgumentValueEx;
     use VzaarApi\Exceptions\S3uploadEx;
     use VzaarApi\Client;
@@ -26,8 +26,7 @@
             
             }else {
                 
-                if(!is_null($httpHandler))
-                    FunctionArgumentEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
+                ArgumentTypeEx::assertInstanceOf(iHttpChannel::class,$httpHandler);
                 
                 $this->httpHandler = $httpHandler;
             }
@@ -37,7 +36,7 @@
         
         public function uploadFile($signature, $filepath) {
             
-            FunctionArgumentEx::assertInstanceOf(Signature::class,$signature);
+            ArgumentTypeEx::assertInstanceOf(Signature::class,$signature);
             
             if(!file_exists($filepath))
                 throw new ArgumentValueEx('File does not exist: '.$filepath);
@@ -47,7 +46,7 @@
             
             $cfg['uri'] = $signature->upload_hostname;
             $cfg['method'] = 'POST';
-            $cfg['headers'][] = 'Enclosure-Type: multipart/form-data';
+            $cfg['headers'] = array('Enclosure-Type: multipart/form-data');
             
             //build S3 POST
             
@@ -75,7 +74,7 @@
                 $file = @fopen($data['file'], "rb");
                 
                 if($file === false)
-                    throw new ArgumentValueEx("unable to open file ($filename)");
+                    throw new ArgumentValueEx("Unable to open file ($filename)");
                 
                 while(!feof($file)){
                     
