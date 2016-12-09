@@ -4,7 +4,7 @@
     use VzaarApi\Tests\VzaarTest;
     use VzaarApi\Tests\Fixtures\DummyRecord;
     use VzaarApi\Exceptions\VzaarError;
-    use VzaarApi\Exceptions\FunctionArgumentEx;
+    use VzaarApi\Exceptions\ArgumentTypeEx;
     use VzaarApi\Exceptions\RecordEx;
     use VzaarApi\Resources\Record;
     use VzaarApi\Client;
@@ -73,7 +73,7 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Client
          */
         public function testRecord_New_Ex1() {
@@ -118,7 +118,7 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of stdClass
          */
         public function testRecord_updateRecord_Ex2() {
@@ -134,7 +134,7 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of stdClass
          */
         public function testRecord_updateRecord_Ex3() {
@@ -412,8 +412,8 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
-         * @expectedExceptionMessage  Parameter shoud be an array
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Parameter should be an array
          */
         public function testRecord_create_Ex1()
         {
@@ -426,7 +426,7 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Client
          */
         public function testRecord_create_Ex2()
@@ -437,6 +437,20 @@
             
             $dummy = new DummyRecord($client);
             $dummy->create($params,$client);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ClientErrorEx
+         * @expectedExceptionMessage  Response data: JSON not valid - Syntax error
+         */
+        public function testRecord_create_Ex3()
+        {
+            
+            $params = array('{"name": "Dummy Record"}');
+            
+            $dummy = new DummyRecord();
+            $dummy->create($params);
             
         }
         
@@ -466,8 +480,8 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
-         * @expectedExceptionMessage  Parameter shoud be an array
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Parameter should be an array
          */
         public function testRecord_read_Ex1()
         {

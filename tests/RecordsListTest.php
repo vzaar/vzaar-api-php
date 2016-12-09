@@ -139,6 +139,40 @@
             
         }
         
+        public function testRecordList_paginate_query() {
+            
+            $callback = function($recordRequest) {
+                
+                $this->assertEquals('GET',$recordRequest['method']);
+                $this->assertEquals('/dummy_endpoint', $recordRequest['endpoint']);
+                $this->assertEmpty($recordRequest['recordPath']);
+                $this->assertEmpty($recordRequest['recordData']);
+                
+                $this->assertEquals(3, $recordRequest['recordQuery']['page']);
+                
+                return \json_decode(DummyList::$list);
+                
+            };
+            
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+            
+            $query = array('page' => 3);
+            
+            $dummy = DummyList::paginate($query, $client);
+            
+            $class = new \ReflectionClass($dummy);
+            $recordData = $class->getProperty('recordData');
+            $recordData->setAccessible(true);
+            
+            $this->assertObjectHasAttribute('data', $recordData->getValue($dummy));
+            $this->assertObjectHasAttribute('meta', $recordData->getValue($dummy));
+            $this->assertInstanceOf(DummyRecord::class, $recordData->getValue($dummy)->data[0]);
+            $this->assertEquals(2, \count($dummy));
+            
+        }
+        
         public function testRecordList_getPage() {
             
             
@@ -364,6 +398,35 @@
                 
             }
         
+        }
+        
+        public function testRecordList_each_item_query() {
+            
+            
+            $callback = function($recordRequest) {
+                
+                $this->assertEquals('asc', $recordRequest['recordQuery']['order']);
+                
+                $result = \json_decode(DummyList::$list);
+                //reset 'next' link
+                $result->meta->links->next = null;
+                
+                return $result;
+                
+            };
+            
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+            
+            $query = array('order' => 'asc');
+            
+            foreach(DummyList::each_item($query, $client) as $dummy) {
+                
+                $this->assertInstanceOf(DummyRecord::class, $dummy);
+                
+            }
+            
         }
         
         public function testRecordList_iterator() {

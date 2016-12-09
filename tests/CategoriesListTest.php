@@ -35,6 +35,8 @@
                 $this->assertEquals('/categories', $recordRequest['endpoint']);
                 $this->assertEquals('42/subtree', $recordRequest['recordPath']);
                 
+                $this->assertEmpty($recordRequest['recordQuery']);
+                
                 return \json_decode(self::$list);
                 
             };
@@ -44,6 +46,39 @@
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
             
             $subtree = CategoriesList::subtree(42,null,$client);
+            
+            $class = new \ReflectionClass($subtree);
+            $recordData = $class->getProperty('recordData');
+            $recordData->setAccessible(true);
+            
+            $this->assertInstanceOf(Category::class, $recordData->getValue($subtree)->data[0]);
+            $this->assertEquals(2, \count($subtree));
+            
+        }
+        
+        public function testCategoriesList_subtree_query() {
+            
+            $callback = function($recordRequest) {
+                
+                $this->assertEquals('GET',$recordRequest['method']);
+                $this->assertEquals('/categories', $recordRequest['endpoint']);
+                $this->assertEquals('42/subtree', $recordRequest['recordPath']);
+                
+                $this->assertEquals(3, $recordRequest['recordQuery']['page']);
+                $this->assertEquals(2, $recordRequest['recordQuery']['levels']);
+                
+                return \json_decode(self::$list);
+                
+            };
+            
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+            
+            $query = array('page' => 3,
+                           'levels' => 2);
+            
+            $subtree = CategoriesList::subtree(42,$query,$client);
             
             $class = new \ReflectionClass($subtree);
             $recordData = $class->getProperty('recordData');

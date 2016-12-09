@@ -136,6 +136,9 @@
             
             file_put_contents($filepath,'filecontent');
             
+            //clear file caches
+            clearstatcache(true, $filepath);
+            
             $signature = Signature::create($filepath, $client);
             
             //cleanup after
@@ -191,7 +194,9 @@
                 clearstatcache(true, $filepath);
             }
             while(filesize($filepath) < Client::MULTIPART_MIN_SIZE);
-                
+            
+            //clear file caches
+            clearstatcache(true, $filepath);
             
             $signature = Signature::create($filepath, $client);
             

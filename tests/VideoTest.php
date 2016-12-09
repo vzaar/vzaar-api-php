@@ -71,6 +71,36 @@
         
         public function testVideo_create_from_guid()
         {
+            $callback = function($recordRequest) {
+                
+                $this->assertEquals('POST',$recordRequest['method']);
+                $this->assertEquals('/videos', $recordRequest['endpoint']);
+                
+                $this->assertEmpty($recordRequest['recordPath']);
+                
+                $this->assertArrayHasKey('guid', $recordRequest['recordData']);
+                $this->assertArrayHasKey('title', $recordRequest['recordData']);
+                
+                $this->assertEquals("vz91e80db09a494467b265f0c327950825", $recordRequest['recordData']['guid']);
+                $this->assertEquals('Test Video', $recordRequest['recordData']['title']);
+                
+                return \json_decode(self::$lookup);
+            };
+            
+            
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+            
+            
+            $param = array('guid' => "vz91e80db09a494467b265f0c327950825",
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param, $client);
+            
+            $this->assertInstanceOf(Video::class,$video);
+            $this->assertNotNull($video->id);
+            
         }
         
         public function testVideo_create_from_file()
@@ -134,6 +164,152 @@
         
         public function testVideo_create_from_url()
         {
+            
+            $callback = function($recordRequest) {
+                
+                $this->assertEquals('POST',$recordRequest['method']);
+                $this->assertEquals('/link_uploads', $recordRequest['endpoint']);
+                
+                $this->assertEmpty($recordRequest['recordPath']);
+                
+                $this->assertArrayHasKey('url', $recordRequest['recordData']);
+                $this->assertArrayHasKey('uploader', $recordRequest['recordData']);
+                $this->assertArrayHasKey('title', $recordRequest['recordData']);
+                
+                $this->assertEquals('Test Video', $recordRequest['recordData']['title']);
+                $this->assertEquals('https://example.com/video.mov', $recordRequest['recordData']['url']);
+                
+                return \json_decode(self::$lookup);
+            };
+            
+            
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+            
+            
+            $param = array('url' => 'https://example.com/video.mov',
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param, $client);
+            
+            $this->assertInstanceOf(Video::class,$video);
+            $this->assertNotNull($video->id);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex1()
+        {
+            
+            $param = array('url' => 'https://example.com/video.mov',
+                           'guid' => "vz91e80db09a494467b265f0c327950825",
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex2()
+        {
+            
+            $param = array('url' => 'https://example.com/video.mov',
+                           'guid' => "vz91e80db09a494467b265f0c327950825",
+                           'filepath' => 'video.mp4',
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex3()
+        {
+            
+            $param = array('url' => 'https://example.com/video.mov',
+                           'filepath' => 'video.mp4',
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex4()
+        {
+            
+            $param = array('guid' => "vz91e80db09a494467b265f0c327950825",
+                           'filepath' => 'video.mp4',
+                           'title' => 'Test Video');
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex5()
+        {
+            
+            $param = array('title' => 'Test Video');
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Only one of the parameters: guid or url or filepath expected
+         */
+        public function testVideo_create_Ex6()
+        {
+            
+            $param = array();
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
+         * @expectedExceptionMessage  Parameter should be an array
+         */
+        public function testVideo_create_Ex7()
+        {
+            
+            $param = null;
+            
+            $video = Video::create($param);
+            
+        }
+        
+        /**
+         * @expectedException         VzaarApi\Exceptions\ArgumentValueEx
+         * @expectedExceptionMessage  File does not exist: movie_fake.mp4
+         */
+        public function testVideo_create_Ex8() {
+            
+            $filepath = 'movie_fake.mp4';
+            
+            $param = array('filepath' => $filepath);
+            
+            $video = Video::create($param);
+            
         }
         
         public static function setUpBeforeClass()

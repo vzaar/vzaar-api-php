@@ -80,7 +80,7 @@
         }
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\iHttpChannel
          */
         public function testClient_New_handler_Ex1() {
@@ -159,7 +159,7 @@
         
         
         /**
-         * @expectedException         VzaarApi\Exceptions\FunctionArgumentEx
+         * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of stdClass
          */
         public function testClient_httpResponse_201_Ex1() {
