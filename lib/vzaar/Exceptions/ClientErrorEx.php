@@ -1,15 +1,12 @@
 <?php
     namespace VzaarApi\Exceptions;
-    
+
     use VzaarApi\Exceptions\ConnectionEx;
-    
-    /*
-    
-     Thrown when http response not as expected by vzaar Client object
-    
+
+    /**
+     * Thrown when http response not as expected by vzaar Client object
      */
-    
-    class ClientErrorEx extends ConnectionEx {
-        
-    }
-?>
+class ClientErrorEx extends ConnectionEx
+{
+
+}//end class
