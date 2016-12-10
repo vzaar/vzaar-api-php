@@ -44,7 +44,7 @@
         
         /**
          * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
-         * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\iHttpChannel
+         * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\IHttpChannel
          */
         public function testS3Client_New_Ex1() {
             

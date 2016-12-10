@@ -440,20 +440,6 @@
             
         }
         
-        /**
-         * @expectedException         VzaarApi\Exceptions\ClientErrorEx
-         * @expectedExceptionMessage  Response data: JSON not valid - Syntax error
-         */
-        public function testRecord_create_Ex3()
-        {
-            
-            $params = array('{"name": "Dummy Record"}');
-            
-            $dummy = new DummyRecord();
-            $dummy->create($params);
-            
-        }
-        
         public function testRecord_read()
         {
             $callback = function($recordRequest) {

@@ -81,11 +81,11 @@
         
         /**
          * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
-         * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\iHttpChannel
+         * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\IHttpChannel
          */
         public function testClient_New_handler_Ex1() {
             
-            //handler has to implement iHttpChannel
+            //handler has to implement IHttpChannel
             $handler = array();
             
             $client = new Client(null,$handler);
@@ -806,8 +806,39 @@
             $this->assertNotNull($client->checkRateReset());
         
         }
-
         
+       /**
+        * @expectedException         VzaarApi\Exceptions\ClientErrorEx
+        * @expectedExceptionMessage  Request data: JSON encoding failed - Type is not supported
+        */
+        public function testClient_object2json(){
+            
+            
+            $filepath = 'movie.mp4';
+            
+            //cleanup before
+            if(file_exists($filepath))
+                unlink($filepath);
+            
+            //create test file
+            file_put_contents($filepath,'filecontent');
+            
+            $file = fopen($filepath, "rb");
+                
+            $client = new Client();
+            
+            $object2json = new \ReflectionMethod($client,'object2json');
+            $object2json->setAccessible(true);
+            $object2json->invoke($client ,$file);
+        
+            //cleanup after
+            if(file_exists($filepath))
+                unlink($filepath);
+            
+            //clear file caches
+            clearstatcache(true, $filepath);
+            
+        }
         
         public static function setUpBeforeClass()
         {

@@ -137,13 +137,14 @@
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
             
-            //create test file
+            
             $filepath = 'movie.mp4';
             
             //cleanup before
             if(file_exists($filepath))
                 unlink($filepath);
             
+            //create test file
             file_put_contents($filepath,'filecontent');
             
             $param = array('filepath' => $filepath);

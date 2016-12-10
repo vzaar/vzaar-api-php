@@ -127,13 +127,13 @@
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
             
-            //create test file
             $filepath = 'single.mov';
             
             //cleanup before
             if(file_exists($filepath))
                 unlink($filepath);
             
+            //create test file
             file_put_contents($filepath,'filecontent');
             
             //clear file caches
@@ -179,13 +179,14 @@
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
             
-            //create test file
+            
             $filepath = 'multipart.mov';
             
             //cleanup before
             if(file_exists($filepath))
                 unlink($filepath);
             
+            //create test file
             $content = '12345678901234567890123456789012345678901234567890';
             $content .= '12345678901234567890123456789012345678901234567890';
             
