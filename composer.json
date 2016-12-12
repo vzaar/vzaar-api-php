@@ -1,34 +1,39 @@
 {
-    "name": "vzaar/vzaar-api-php",
-    "description": "The PHP client for Vzaar API.",
-    "type": "library",
-    "keywords": [ "vzaar", "video", "api" ],
-    "homepage": "https://github.com/vzaar/vzaar-api-php",
-    "license": "MIT",
-    "authors": [
-                {
-                "name": "Ed James",
-                "email": "ed@vzaar.com"
-                }
-                ],
-    "support": {
-        "issues": "https://vzaar.com/help"
+  "name": "vzaar/vzaar-api-php",
+  "description": "The PHP client for Vzaar API.",
+  "type": "library",
+  "version": "2.0.0-alpha",
+  "keywords": [ "vzaar", "video", "api" ],
+  "homepage": "https://github.com/vzaar/vzaar-api-php",
+  "license": "MIT",
+  "authors": [
+    {
+    "name": "Jozef Chraplewski",
+    "email": "jozef@vzaar.com"
     },
-    "require": {
-        "php": "^5.6 || ^7.0",
-        "ext-curl": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~5.6",
-    },
-    "autoload": {
-        "psr-4": {
-            "VzaarApi\\": "lib/vzaar/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-version-2.0.0-alpha": "2.0.x-dev"
-        }
+    {
+    "name": "Ed James",
+    "email": "ed@vzaar.com"
     }
+  ],
+  "support": {
+    "issues": "https://vzaar.com/help"
+  },
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "VzaarApi\\": "lib/vzaar/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-version-2.0.0-alpha": "2.0.x-dev"
+    }
+  }
 }

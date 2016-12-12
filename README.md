@@ -8,26 +8,18 @@ vzaar's PHP client for interacting with version 2 of the [vzaar API](https://vza
 
 ## Requirements
 
-PHP 5.6+
+- Recommended: PHP 7.0+
+- Minimum: PHP 5.6+
 
 ## Installation
 
-Create file named composer.json in your project directory with the below content:
+Install the package using `composer`:
 
 ```
-{
-    "require-dev": {
-        "vzaar/vzaar-api-php": "2.0.*-dev"
-    }
-}
-```
-Run the below command from your project directory level.
-If Composer not installed, please follow the [instructions](https://getcomposer.org/doc/00-intro.md).
-
-```
-php composer.phar install
+composer install
 ```
 
+If `composer` is not installed, please follow [these instructions](https://getcomposer.org/doc/00-intro.md).
 
 ## Backwards compatability
 

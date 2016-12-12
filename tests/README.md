@@ -2,15 +2,12 @@
 
 ## How to run tests
 
-After the package [installation](../README.md) with Composer navigate to the library directory.
-```
-<your-project-directory>/vendor/vzaar/vzaar-api-php
-```
+Ensure that you have installed the package using `composer`.
 
-Run tests (CLI):
+Run the tests from the root directory of the package:
 
 ```
-phpunit
+./vendor/bin/phpunit
 ```
 
 ## License

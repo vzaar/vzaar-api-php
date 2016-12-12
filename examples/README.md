@@ -2,26 +2,37 @@
 
 ## How to run examples
 
-After the package [installation](../README.md) with Composer navigate to a directory where the examples are stored:
-
-```
-<your-project-directory>/vendor/vzaar/vzaar-api-php/examples
-```
+Ensure that you have installed the package using `composer`.
 
 Set system environment variables:
-
-If you use bash shell:
 
 ```
 export VZAAR_CLIENT_ID=<your-client-id>
 export VZAAR_AUTH_TOKEN=<your-auth-token>
 ```
 
-Run examples (CLI):
-(NOTE: if credentials missing during examples run, please check if 'variables_order' variable in your php.ini file allows ENV super global to be registered)
+Run the example files from the `examples` directory:
 
 ```
+cd examples
 php -f <example-file-name>.php
+```
+
+### Error: credentials missing
+If your environment varialbes are set but not being recognised correctly,
+please check that the `variables_order` variable in your `php.ini` file allows
+ENV super global to be registered.
+
+The default value is _probably_ this:
+
+```
+variables_order = "GPCS"
+```
+
+Change it to this:
+
+```
+variables_order = "EGPCS"
 ```
 
 ## License
