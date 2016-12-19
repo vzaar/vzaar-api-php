@@ -1,5 +1,6 @@
 t.php
 api_envs.php
+examples/autoload.php
 vendor
 .idea
 .DS_Store

@@ -4,35 +4,23 @@
 
 Ensure that you have installed the package using `composer`.
 
-Set system environment variables:
+Make a local copy of the `autoload.php` file:
 
 ```
-export VZAAR_CLIENT_ID=<your-client-id>
-export VZAAR_AUTH_TOKEN=<your-auth-token>
+cp examples/autoload.php.example examples/autoload.php
 ```
 
-Run the example files from the `examples` directory:
+Update the file with your API credentials:
 
 ```
-cd examples
-php -f <example-file-name>.php
+VzaarApi\Client::$client_id = '<your-client-id>';
+VzaarApi\Client::$auth_token = '<your-auth-token>';
 ```
 
-### Error: credentials missing
-If your environment varialbes are set but not being recognised correctly,
-please check that the `variables_order` variable in your `php.ini` file allows
-ENV super global to be registered.
-
-The default value is _probably_ this:
+Run the tests from the root directory of the package:
 
 ```
-variables_order = "GPCS"
-```
-
-Change it to this:
-
-```
-variables_order = "EGPCS"
+php -f examples/<example-file-name>.php
 ```
 
 ## License
