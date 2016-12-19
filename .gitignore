@@ -1,5 +1,6 @@
 t.php
 api_envs.php
+composer.phar
 examples/autoload.php
 vendor
 .idea
