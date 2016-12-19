@@ -1,6 +1,6 @@
 <?php
     namespace VzaarApi\Tests;
-    
+
     use VzaarApi\Tests\VzaarTest;
     use VzaarApi\Resources\HttpCurl;
     use VzaarApi\Resources\S3Client;
@@ -8,197 +8,157 @@
     use VzaarApi\Client;
     use VzaarApi\Video;
     use VzaarApi\Signature;
-    
+
     class S3ClentTest extends VzaarTest {
-        
+
         public static $single;
         public static $multipart;
         public static $lookup;
         public static $httpCode201;
         public static $httpCode404;
-        
+
         public function testS3Client_New() {
-            
+
             $client = new S3Client();
-            
+
             $class = new \ReflectionClass($client);
             $httpHandler = $class->getProperty('httpHandler');
             $httpHandler->setAccessible(true);
-            
+
             $this->assertInstanceOf(HttpCurl::class, $httpHandler->getValue($client));
-            
+
         }
-        
+
         public function testS3Client_New_param() {
-            
+
             $handler = new HttpCurl();
             $client = new S3Client($handler);
-            
+
             $class = new \ReflectionClass($client);
             $httpHandler = $class->getProperty('httpHandler');
             $httpHandler->setAccessible(true);
-            
+
             $this->assertInstanceOf(HttpCurl::class, $httpHandler->getValue($client));
-            
+
         }
-        
+
         /**
          * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  Parameter should be instance of VzaarApi\Resources\IHttpChannel
          */
         public function testS3Client_New_Ex1() {
-            
+
             $handler = new \stdClass();
             $client = new S3Client($handler);
-            
+
         }
-        
+
         public function testS3Client_uploadFile_videoCreate_small() {
-            
+
             //mock HttpCurl
             $callback_handler = function($cfg) {
-                
+
                 $this->assertEquals('POST', $cfg['method']);
                 $this->assertEquals('Enclosure-Type: multipart/form-data', $cfg['headers'][0]);
 
                 $this->assertEquals('https://vzaar-upload-development.s3.amazonaws.com', $cfg['uri']);
-                
+
                 $this->assertArrayNotHasKey('chunk', $cfg['data']);
-                
+
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertNotRegExp($regex_key, $cfg['data']['key']);
-                
+
                 $this->assertInstanceOf(\CURLFile::class, $cfg['data']['file']);
-                
+
                 return self::$httpCode201;
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
-            $filepath = 'movie.mp4';
-            
-            //cleanup before
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            file_put_contents($filepath,'filecontent');
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
+
+            $filepath = 'tests/fixtures/movie-1mb.mp4';
+
             $param = array('filepath' => $filepath);
-            
+
             $video = Video::create($param, $client, $s3client);
-            
+
             $this->assertTrue(isset($video->id));
-            
-            //cleanup after
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
         }
-        
+
         public function testS3Client_uploadFile_videoCreate_medium() {
-            
+
             //mock HttpCurl
             $callback_handler = function($cfg) {
-                
+
                 $this->assertEquals('POST', $cfg['method']);
                 $this->assertEquals('Enclosure-Type: multipart/form-data', $cfg['headers'][0]);
-                
+
                 $this->assertEquals('https://vzaar-upload-development.s3.amazonaws.com', $cfg['uri']);
-                
+
                 $this->assertArrayHasKey('chunk', $cfg['data']);
-                
+
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertRegExp($regex_key, $cfg['data']['key']);
-                
-                $regex_file = '/1234567890/';
+
+                $regex_file = '/5mb/';
                 $this->assertRegExp($regex_file, $cfg['data']['file']);
-                
+
                 return self::$httpCode201;
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
-            $filepath = 'movie.mp4';
-            
-            //cleanup before
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            $content = '12345678901234567890123456789012345678901234567890';
-            $content .= '12345678901234567890123456789012345678901234567890';
-            
-            do{
-                file_put_contents($filepath,$content,FILE_APPEND);
-                clearstatcache(true, $filepath);
-            }
-            while(filesize($filepath) < Client::MULTIPART_MIN_SIZE);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
+
+            $filepath = 'tests/fixtures/movie-5mb.mp4';
             $param = array('filepath' => $filepath);
-            
+
             $video = Video::create($param, $client, $s3client);
-            
+
             $this->assertTrue(isset($video->id));
-            
-            //cleanup after
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
         }
-        
+
         /**
          * @expectedException         VzaarApi\Exceptions\ArgumentTypeEx
          * @expectedExceptionMessage  File does not exist: notexisting.file
@@ -207,243 +167,206 @@
 
             //mock HttpCurl
             $callback_handler = function($cfg) {
-                
+
                 return ;
-                
+
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
-            
+
+
             $signature = Signature::single(null,$client);
-            
+
             $s3client = new S3Client($handler);
-            
+
             $filepath = 'notexisting.file';
-            
+
             $s3client->uploadFile($signature, $filepath);
-        
+
         }
-        
+
         public function testS3Client_uploadFile_multipart_emptyfile() {
-            
+
             //mock HttpCurl
             $callback_handler = function($cfg) {
 
                 $this->assertArrayHasKey('chunk', $cfg['data']);
-                
+
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertRegExp($regex_key, $cfg['data']['key']);
-                
+
                 $this->assertEmpty($cfg['data']['file']);
-                
+
                 return self::$httpCode201;
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
+
             $filepath = 'movie.mp4';
-            
+
             //cleanup before
             if(file_exists($filepath))
                 unlink($filepath);
-            
+
             \touch($filepath);
-            
+
             //clear file caches
             clearstatcache(true, $filepath);
-            
+
             $param = array('filename' => 'FileName',
                            'filesize' => 10024);
-            
+
             $signature = Signature::multipart($param, $client);
-            
+
             $s3client = new S3Client($handler);
-            
+
             $s3client->uploadFile($signature, $filepath);
-            
+
             //cleanup after
             if(file_exists($filepath))
                 unlink($filepath);
-            
+
             //clear file caches
             clearstatcache(true, $filepath);
         }
-        
+
         /**
          * @expectedException         VzaarApi\Exceptions\S3uploadEx
          */
         public function testS3Client_uploadFile_Ex2() {
-            
+
             //mock HttpCurl
             $callback_handler = function($cfg) {
-                
+
                 return self::$httpCode404;
-                
+
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
-            
+
             $signature = Signature::single(null,$client);
-            
+
             $s3client = new S3Client($handler);
-            
-            $filepath = 'movie.mp4';
-            
-            //cleanup before
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            \touch($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
+
+            $filepath = 'tests/fixtures/movie-0mb.mp4';
             $s3client->uploadFile($signature, $filepath);
-            
-            //cleanup after
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
         }
-        
-        
+
+
         /**
          * @expectedException         VzaarApi\Exceptions\S3uploadEx
          */
         public function testS3Client_uploadFile_Ex3() {
-            
+
             //mock HttpCurl
             $callback_handler = function($cfg) {
-                
+
                 return self::$httpCode404;
-                
+
             };
-            
+
             $handler = $this->createMock(HttpCurl::class);
             $handler->method('httpRequest')
             ->will($this->returnCallback($callback_handler, $this->returnArgument(0)));
-            
+
             $s3client = new S3Client($handler);
-            
+
             //mock Client
             $callback = function($recordRequest) {
-                
+
                 if($recordRequest['endpoint'] == '/signature/single')
                     return \json_decode(self::$single);
-                
+
                 if($recordRequest['endpoint'] == '/signature/multipart')
                     return \json_decode(self::$multipart);
-                
+
                 if($recordRequest['endpoint'] == '/videos')
                     return \json_decode(self::$lookup);
-                
+
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
-            
+
+
             $param = array('filename' => 'FileName',
                            'filesize' => 10024);
-            
+
             $signature = Signature::multipart($param, $client);
-            
+
             $s3client = new S3Client($handler);
-            
-            $filepath = 'movie.mp4';
-            
-            //cleanup before
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            \touch($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
+
+            $filepath = 'tests/fixtures/movie-5mb.mp4';
             $s3client->uploadFile($signature, $filepath);
-            
-            //cleanup after
-            if(file_exists($filepath))
-                unlink($filepath);
-            
-            //clear file caches
-            clearstatcache(true, $filepath);
-            
         }
-        
+
         public static function setUpBeforeClass()
         {
             self::$lookup = <<<EOD
@@ -487,7 +410,7 @@
                 }
             }
 EOD;
-            
+
             self::$multipart = <<<'EOD'
             {
                 "data": {
@@ -507,7 +430,7 @@ EOD;
                 }
             }
 EOD;
-            
+
             self::$single = <<<'EOD'
             {
                 "data": {
@@ -524,22 +447,22 @@ EOD;
                 }
             }
 EOD;
-            
+
             /*
              * fixture HTTP 201
              */
             $status = 'HTTP/1.1 201 Created'."\r\n";
-            
+
             self::$httpCode201 = array('httpCode' => 201,
                                         'httpResponse' => $status);
-            
+
             /*
              * fixture HTTP 201
              */
             self::$httpCode404 = array('httpCode' => 404,
                                        'httpResponse' => 'NOT FOUND');
-            
+
     }
-        
+
 }
 ?>
