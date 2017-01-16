@@ -65,7 +65,8 @@
 
       // Update recipe
       $recipe->name = 'updated by PHP';
-      $recipe->encoding_preset_ids = [4, 5, 6];
+      $recipe->description = 'updated by the SDK tests';
+      $recipe->encoding_preset_ids = [3, 3, 3, 3, 3];
 
       if($recipe->edited())
         $recipe->save();

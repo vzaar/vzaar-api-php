@@ -4,6 +4,9 @@
     VzaarApi\Client::$client_id = '<your-client-id>';
     VzaarApi\Client::$auth_token = '<your-auth-token>';
 
+    // uncomment if you want to target local environment
+    // VzaarApi\Client::$url = 'http://app.vzaar.localhost/api';
+
     //outputs equest/response details
     //VzaarApi\Client::$VERBOSE = true;
 
