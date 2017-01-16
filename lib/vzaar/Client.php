@@ -13,6 +13,7 @@ class Client
     public static $auth_token = 'token';
     public static $version    = 'v2';
     public static $urlAuth    = false;
+    public static $url        = 'https://api.vzaar.com/api';
 
     public static $VERBOSE = false;
 
@@ -28,7 +29,6 @@ class Client
     protected $clientUrlAuth;
 
     protected $apiVersion = 'v2';
-    protected $apiUrl     = 'https://api.vzaar.com/api';
 
     protected $httpHandler = null;
     protected $httpCode    = null;
@@ -74,6 +74,12 @@ class Client
             $this->clientUrlAuth = $config['urlAuth'];
         } else {
             $this->clientUrlAuth = self::$urlAuth;
+        }
+
+        if (isset($config['url']) === true) {
+            $this->apiUrl = $config['url'];
+        } else {
+            $this->apiUrl = self::$url;
         }
 
         if (is_null($httpHandler) === true) {
