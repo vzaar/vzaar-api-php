@@ -162,4 +162,20 @@ class Video extends Record
     }//end create()
 
 
+    public function save($params = null)
+    {
+
+        $this->crudUpdate($params);
+
+    }//end save()
+
+
+    public function delete()
+    {
+
+        $this->crudDelete();
+
+    }//end delete()
+
+
 }//end class

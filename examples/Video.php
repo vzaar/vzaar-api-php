@@ -2,7 +2,7 @@
     require 'autoload.php';
 
     //
-    // Create Video (single-part upload)
+    // Create/Update/Delete Video (single-part upload)
     //
     try {
 
@@ -14,6 +14,23 @@
 
       $lookupFile = VzaarApi\Video::find($videoFile->id);
       echo PHP_EOL.'Lookup: '. $lookupFile->id .'-'. $lookupFile->title;
+
+      // Update video
+      $lookupFile->title = 'Updated by PHP';
+      $lookupFile->description = 'Updated by PHP, but in more detail';
+      $lookupFile->seo_url = 'http://vzaar.com';
+      $lookupFile->private = true;
+      if($lookupFile->edited())
+        $lookupFile->save();
+
+      // ensure details were saved
+      $lookupFile = VzaarApi\Video::find($videoFile->id);
+      echo PHP_EOL.'Updated video: '. $lookupFile->id .'-'. $lookupFile->title .'-'. $lookupFile->description .'-'. $lookupFile->seo_url .'-'. $lookupFile->private;
+      echo PHP_EOL;
+
+      // Delete video
+      $lookupFile->delete();
+
       echo PHP_EOL;
 
     } catch(VzaarApi\Exceptions\VzaarException $ve) {
