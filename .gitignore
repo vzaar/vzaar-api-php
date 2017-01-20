@@ -6,3 +6,4 @@ vendor
 .idea
 .DS_Store
 *.mp4
+*.log
