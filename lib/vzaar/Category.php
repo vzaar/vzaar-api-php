@@ -41,4 +41,31 @@ class Category extends Record
     }//end find()
 
 
+    public static function create($params, $client = null)
+    {
+
+        $category = new self($client);
+        $category->crudCreate($params);
+
+        return $category;
+
+    }//end create()
+
+
+    public function save($params = null)
+    {
+
+        $this->crudUpdate($params);
+
+    }//end save()
+
+
+    public function delete()
+    {
+
+        $this->crudDelete();
+
+    }//end delete()
+
+
 }//end class
