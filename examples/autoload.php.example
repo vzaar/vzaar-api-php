@@ -1,5 +1,5 @@
 <?php
-    require 'lib/vzaar.php';
+    require '../lib/vzaar.php';
 
     VzaarApi\Client::$client_id = '<your-client-id>';
     VzaarApi\Client::$auth_token = '<your-auth-token>';
