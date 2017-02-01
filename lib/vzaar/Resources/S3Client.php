@@ -64,7 +64,6 @@ class S3Client
                 );
 
         if (isset($signature->parts) === true) {
-            $data['chunks'] = $signature->parts;
 
             $chunk = 0;
             $key   = $data['key'];
@@ -78,7 +77,7 @@ class S3Client
             }
 
             while (feof($file) === false) {
-                $data['chunk'] = $chunk;
+
                 $data['key']   = $key.'.'.$chunk;
 
                 $data['file'] = \fread($file, $signature->part_size_in_bytes);
