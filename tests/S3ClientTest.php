@@ -63,8 +63,6 @@
 
                 $this->assertEquals('https://vzaar-upload-development.s3.amazonaws.com', $cfg['uri']);
 
-                $this->assertArrayNotHasKey('chunk', $cfg['data']);
-
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertNotRegExp($regex_key, $cfg['data']['key']);
 
@@ -115,8 +113,6 @@
                 $this->assertEquals('Enclosure-Type: multipart/form-data', $cfg['headers'][0]);
 
                 $this->assertEquals('https://vzaar-upload-development.s3.amazonaws.com', $cfg['uri']);
-
-                $this->assertArrayHasKey('chunk', $cfg['data']);
 
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertRegExp($regex_key, $cfg['data']['key']);
@@ -211,8 +207,6 @@
 
             //mock HttpCurl
             $callback_handler = function($cfg) {
-
-                $this->assertArrayHasKey('chunk', $cfg['data']);
 
                 $regex_key = '/^.+\.\d{1,}$/';
                 $this->assertRegExp($regex_key, $cfg['data']['key']);
