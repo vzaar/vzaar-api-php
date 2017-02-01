@@ -1,110 +1,186 @@
 <?php
     namespace VzaarApi\Tests;
-    
+
     use VzaarApi\Tests\VzaarTest;
     use VzaarApi\Exceptions\RecordEx;
     use VzaarApi\Client;
     use VzaarApi\Category;
     use VzaarApi\CategoriesList;
-    
+
     class CategoryTest extends VzaarTest
     {
         public static $lookup;
         public static $subtree;
-        
+
         public function testCategory_New()
         {
-            
+
             $category = new Category();
-            
+
             $class = new \ReflectionClass($category);
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
-            
+
             $this->assertEquals('/categories',$endpoint->getValue());
             $this->assertInstanceOf(Client::class, $category->getClient());
-            
+
         }
-        
+
         public function testCategory_Parameter()
         {
-            
+
             $client = new Client();
             $category = new Category($client);
-            
+
             $class = new \ReflectionClass($category);
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
-            
+
             $this->assertEquals('/categories',$endpoint->getValue());
             $this->assertInstanceOf(Client::class, $category->getClient());
-            
+
         }
-        
+
         public function testCategory_find()
         {
             $callback = function($recordRequest) {
-                
+
                 $this->assertEquals('GET',$recordRequest['method']);
                 $this->assertEquals('/categories', $recordRequest['endpoint']);
-                
+
                 $this->assertEquals(1, $recordRequest['recordPath']);
-                
+
                 return \json_decode(self::$lookup);
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
+
             $category_id=1;
             $category = Category::find($category_id, $client);
-            
+
             $this->assertInstanceOf(Category::class, $category);
             $this->assertNotNull($category->id);
-            
+
         }
-        
+
         public function testCategory_subtree()
         {
             $callback = function($recordRequest) {
-                
+
                 $this->assertEquals('GET',$recordRequest['method']);
                 $this->assertEquals('/categories', $recordRequest['endpoint']);
-                
+
                 $this->assertEquals('1/subtree', $recordRequest['recordPath']);
-                
+
                 return \json_decode(self::$subtree);
             };
-            
+
             $client = $this->createMock(Client::class);
             $client->method('clientSend')
             ->will($this->returnCallback($callback,$this->returnArgument(0)));
-            
+
             $category = new Category($client);
-            
+
             $jsondata = \json_decode(self::$lookup);
-            
+
             $updateRecord = new \ReflectionMethod($category,'updateRecord');
             $updateRecord->setAccessible(true);
             $updateRecord->invoke($category ,$jsondata);
-            
+
             $this->assertNotNull($category->id);
-            
+
             $subtree = $category->subtree();
-            
+
             $this->assertInstanceOf(Category::class, $category);
             $this->assertInstanceOf(CategoriesList::class, $subtree);
-            
+
             $this->assertNotNull($category->id);
-            
+
             $this->assertEquals(2, \count($subtree));
-            
+
         }
-        
+
+        public function testCategory_create()
+        {
+            $callback = function($recordRequest) {
+
+                $this->assertEquals('POST',$recordRequest['method']);
+                $this->assertEquals('/categories', $recordRequest['endpoint']);
+
+                $this->assertEmpty($recordRequest['recordPath']);
+
+                $this->assertArrayHasKey('name', $recordRequest['recordData']);
+
+                $this->assertEquals('Test Category', $recordRequest['recordData']['name']);
+
+                return \json_decode(self::$lookup);
+            };
+
+
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+
+
+            $param = array('name' => 'Test Category');
+
+            $category = Category::create($param, $client);
+
+            $this->assertInstanceOf(Category::class,$category);
+            $this->assertNotNull($category->id);
+            $this->assertNotNull($category->name);
+
+        }
+
+        public function testCategory_save()
+        {
+            $callback = function($recordRequest) {
+
+                $this->assertEquals('PATCH',$recordRequest['method']);
+                $this->assertEquals('/categories', $recordRequest['endpoint']);
+
+                $this->assertArrayHasKey('name',$recordRequest['recordData']);
+
+                $result = \json_decode(self::$lookup);
+                $result->data->name = $recordRequest['recordData']['name'];
+
+                return $result;
+            };
+
+            $client = $this->createMock(Client::class);
+            $client->method('clientSend')
+            ->will($this->returnCallback($callback,$this->returnArgument(0)));
+
+            $category = new Category($client);
+
+            $jsondata = \json_decode(self::$lookup);
+
+            $updateRecord = new \ReflectionMethod($category,'updateRecord');
+            $updateRecord->setAccessible(true);
+            $updateRecord->invoke($category ,$jsondata);
+
+            $old_value = $category->name;
+            $category->name = "Arts";
+            $new_value = $category->name;
+
+            $this->assertNotEquals($new_value, $old_value);
+
+            $category->save();
+
+            $saved_value = $category->name;
+
+            $this->assertNotEquals($saved_value, $old_value);
+            $this->assertEquals($new_value, $saved_value);
+
+        }
+
+
+
         public static function setUpBeforeClass()
         {
-            
+
             self::$lookup = <<<EOD
             {
                 "data": {
@@ -124,7 +200,7 @@
                 }
             }
 EOD;
-            
+
             self::$subtree=<<<EOD
             {
                 "data": [
