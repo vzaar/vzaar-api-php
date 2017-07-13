@@ -176,6 +176,10 @@ This API call allows you to delete a video from your account. If deletion was su
 Vzaar::deleteVideo(VZAAR_VIDEO_ID);
 ```
 
+#### Support
+
+If you encounter any problems with this library or would like to talk to us about any problems you're having, please [contact our support team](http://help.vzaar.com/)
+
 
 ### License
 
