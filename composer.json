@@ -2,7 +2,6 @@
   "name": "vzaar/vzaar-api-php",
   "description": "The PHP client for Vzaar API.",
   "type": "library",
-  "version": "2.0.0-alpha",
   "keywords": [ "vzaar", "video", "api" ],
   "homepage": "https://github.com/vzaar/vzaar-api-php",
   "license": "MIT",
@@ -17,7 +16,7 @@
     }
   ],
   "support": {
-    "issues": "https://vzaar.com/help"
+    "issues": "https://help.vzaar.com"
   },
   "require": {
     "php": "^5.6 || ^7.0",
@@ -33,7 +32,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-version-2.0.0-alpha": "2.0.x-dev"
+      "dev-master": "2.0.x-dev"
     }
   }
 }
