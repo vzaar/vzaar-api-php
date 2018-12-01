@@ -80,10 +80,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')
@@ -132,10 +132,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')
@@ -177,10 +177,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')
@@ -225,10 +225,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')
@@ -289,10 +289,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')
@@ -334,10 +334,10 @@
             //mock Client
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
-                if($recordRequest['endpoint'] == '/signature/multipart')
+                if($recordRequest['endpoint'] == '/signature/multipart/2')
                     return \json_decode(self::$multipart);
 
                 if($recordRequest['endpoint'] == '/videos')

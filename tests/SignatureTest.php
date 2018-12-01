@@ -45,7 +45,7 @@
             $callback = function($recordRequest) {
 
                 $this->assertEquals('POST',$recordRequest['method']);
-                $this->assertEquals('/signature/single', $recordRequest['endpoint']);
+                $this->assertEquals('/signature/single/2', $recordRequest['endpoint']);
 
                 $this->assertEmpty($recordRequest['recordPath']);
 
@@ -67,7 +67,7 @@
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
 
-            $this->assertEquals('/signature/single',$endpoint->getValue());
+            $this->assertEquals('/signature/single/2',$endpoint->getValue());
 
         }
 
@@ -76,7 +76,7 @@
             $callback = function($recordRequest) {
 
                 $this->assertEquals('POST',$recordRequest['method']);
-                $this->assertEquals('/signature/multipart', $recordRequest['endpoint']);
+                $this->assertEquals('/signature/multipart/2', $recordRequest['endpoint']);
 
                 $this->assertEmpty($recordRequest['recordPath']);
 
@@ -103,7 +103,7 @@
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
 
-            $this->assertEquals('/signature/multipart',$endpoint->getValue());
+            $this->assertEquals('/signature/multipart/2',$endpoint->getValue());
 
         }
 
@@ -112,7 +112,7 @@
             $callback = function($recordRequest) {
 
                 $this->assertEquals('POST',$recordRequest['method']);
-                $this->assertEquals('/signature/single', $recordRequest['endpoint']);
+                $this->assertEquals('/signature/single/2', $recordRequest['endpoint']);
 
                 $this->assertEmpty($recordRequest['recordPath']);
 
@@ -139,7 +139,7 @@
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
 
-            $this->assertEquals('/signature/single',$endpoint->getValue());
+            $this->assertEquals('/signature/single/2',$endpoint->getValue());
         }
 
         public function testSignature_create_multipart()
@@ -147,7 +147,7 @@
             $callback = function($recordRequest) {
 
                 $this->assertEquals('POST',$recordRequest['method']);
-                $this->assertEquals('/signature/multipart', $recordRequest['endpoint']);
+                $this->assertEquals('/signature/multipart/2', $recordRequest['endpoint']);
 
                 $this->assertEmpty($recordRequest['recordPath']);
 
@@ -174,7 +174,7 @@
             $endpoint = $class->getProperty('endpoint');
             $endpoint->setAccessible(true);
 
-            $this->assertEquals('/signature/multipart',$endpoint->getValue());
+            $this->assertEquals('/signature/multipart/2',$endpoint->getValue());
         }
 
         public static function setUpBeforeClass()

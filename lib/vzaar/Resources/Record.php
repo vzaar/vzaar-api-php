@@ -16,6 +16,7 @@ abstract class Record
     protected $recordQuery;
     protected $recordBody;
     protected $recordData;
+    protected $recordDataType;
 
 
     protected function __construct($client = null)
@@ -91,6 +92,7 @@ abstract class Record
         $recordRequest['recordPath']  = $this->recordPath;
         $recordRequest['recordQuery'] = $this->recordQuery;
         $recordRequest['recordData']  = $this->recordBody;
+        $recordRequest['recordDataType'] = $this->recordDataType;
 
         $result = $this->httpClient->clientSend($recordRequest);
 
@@ -130,8 +132,16 @@ abstract class Record
     }//end cleanRecord()
 
 
-    protected function crudCreate($params = null)
+    protected function crudCreate($params = null, $path = null, $dataTypeOverride = null)
     {
+
+        if (is_null($path) === false) {
+            $this->recordPath = $path;
+        }
+
+        if (is_null($path) === false) {
+            $this->recordDataType = $dataTypeOverride;
+        }
 
         if (is_null($params) === false) {
             ArgumentTypeEx::assertIsArray($params);
@@ -140,6 +150,26 @@ abstract class Record
         }
 
         $httpMethod = 'POST';
+        $result     = $this->requestClient($httpMethod);
+
+        $this->updateRecord($result);
+
+    }//end crudCreate()
+
+    protected function crudPatch($params = null, $path = null)
+    {
+
+        if (is_null($path) === false) {
+            $this->recordPath = $path;
+        }
+
+        if (is_null($params) === false) {
+            ArgumentTypeEx::assertIsArray($params);
+
+            $this->recordBody = $params;
+        }
+
+        $httpMethod = 'PATCH';
         $result     = $this->requestClient($httpMethod);
 
         $this->updateRecord($result);
@@ -168,11 +198,15 @@ abstract class Record
     }//end crudRead()
 
 
-    protected function crudUpdate($params = null)
+    protected function crudUpdate($params = null, $path = null)
     {
 
         $this->assertRecordValid();
-        $this->recordPath = $this->id;
+        if(is_null($path)){
+            $this->recordPath = $this->id;
+        }else{
+            $this->recordPath = $path;
+        }
 
         /*
             Unset the 'id' if set as object property.
@@ -203,11 +237,15 @@ abstract class Record
     }//end crudUpdate()
 
 
-    protected function crudDelete()
+    protected function crudDelete($path = NULL)
     {
 
         $this->assertRecordValid();
-        $this->recordPath = $this->id;
+        if(is_null($path) === true){
+            $this->recordPath = $this->id;
+        }else{
+            $this->recordPath = $path;
+        }
 
         /*
             Clear the recordBody array, in case any object properties

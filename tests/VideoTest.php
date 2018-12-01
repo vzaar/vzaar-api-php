@@ -107,7 +107,7 @@
         {
             $callback = function($recordRequest) {
 
-                if($recordRequest['endpoint'] == '/signature/single')
+                if($recordRequest['endpoint'] == '/signature/single/2')
                     return \json_decode(self::$single);
 
                 $this->assertEquals('POST',$recordRequest['method']);
