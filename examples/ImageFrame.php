@@ -12,4 +12,12 @@ $params = [
     'time' => 2.5,
 ];
 $video = VzaarApi\ImageFrame::set($videoFile->id, $params);
-echo 'Video: ' . $video->id;
+echo PHP_EOL.'Updated video with image frame from VOD itself: ' . $video->id;
+
+
+// From file
+$params = [
+    'filepath' => '../vzaar.png',
+];
+$video = VzaarApi\ImageFrame::create($videoFile->id, $params);
+echo PHP_EOL.'Updated video with image frame from file: ' . $video->id;

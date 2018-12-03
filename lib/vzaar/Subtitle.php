@@ -91,9 +91,14 @@ class Subtitle extends Record
         $this->assertRecordValid();
 
         $path = $id."/subtitles/".$this->id;
-        
-        $this->crudUpdate($params, $path);
-        
+
+        $result = $this->createData($this->recordBody);
+
+        if(isset($result['file']) === true){
+            $this->crudUpdate($result, $path, 'multipart/form-data');
+        }else{
+            $this->crudUpdate($result, $path);
+        }
     }//end save()
 
     public function delete($id)

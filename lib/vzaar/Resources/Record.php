@@ -139,7 +139,7 @@ abstract class Record
             $this->recordPath = $path;
         }
 
-        if (is_null($path) === false) {
+        if (is_null($dataTypeOverride) === false) {
             $this->recordDataType = $dataTypeOverride;
         }
 
@@ -198,8 +198,10 @@ abstract class Record
     }//end crudRead()
 
 
-    protected function crudUpdate($params = null, $path = null)
+    protected function crudUpdate($params = null, $path = null, $dataTypeOverride = null)
     {
+        //always set the recordDataType, because you may call save with a data type and then without one
+        $this->recordDataType = $dataTypeOverride;
 
         $this->assertRecordValid();
         if(is_null($path)){
