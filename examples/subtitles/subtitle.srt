@@ -1,0 +1,3 @@
+1
+00:00:00,498 --> 00:00:02,827
+Bonjour this is subtitles from a file

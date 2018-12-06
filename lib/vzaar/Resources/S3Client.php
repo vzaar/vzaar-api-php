@@ -53,8 +53,10 @@ class S3Client
 
         $data = array(
                  'x-amz-meta-uploader'   => Client::UPLOADER.Client::VERSION,
-                 'AWSAccessKeyId'        => $signature->access_key_id,
-                 'Signature'             => $signature->signature,
+                 'x-amz-credential'      => $signature->{'x-amz-credential'},
+                 'x-amz-algorithm'       => $signature->{'x-amz-algorithm'},
+                 'x-amz-date'            => $signature->{'x-amz-date'},
+                 'x-amz-signature'       => $signature->{'x-amz-signature'},
                  'acl'                   => $signature->acl,
                  'bucket'                => $signature->bucket,
                  'policy'                => $signature->policy,

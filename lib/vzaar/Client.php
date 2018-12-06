@@ -176,6 +176,7 @@ class Client
      * ['recordPath'] : string
      * ['recordQuery'] : array
      * ['recordData'] : array
+     * ['recordDataType'] : array or null
      */
     public function clientSend($recordRequest)
     {
@@ -203,10 +204,14 @@ class Client
         $httpRequest['data'] = '';
 
         if (empty($recordRequest['recordData']) === false) {
-            $httpRequest['data'] = $this->object2json($recordRequest['recordData']);
-
-            $httpRequest['headers'][] = 'Content-Type: application/json';
-            $httpRequest['headers'][] = 'Content-Length: '.strlen($httpRequest['data']);
+            if (is_null($recordRequest['recordDataType']) === false) {
+                $httpRequest['data'] = $recordRequest['recordData'];
+                $httpRequest['headers'][] = 'Content-Type: '.$recordRequest['recordDataType'];
+            }else{
+                $httpRequest['data'] = $this->object2json($recordRequest['recordData']);
+                $httpRequest['headers'][] = 'Content-Type: application/json';
+                $httpRequest['headers'][] = 'Content-Length: '.strlen($httpRequest['data']);
+            }
         }
 
         if (self::$VERBOSE === true) {
@@ -299,7 +304,7 @@ class Client
             error_log($log);
         }
 
-        if ($this->httpCode === 200 || $this->httpCode === 201) {
+        if ($this->httpCode === 200 || $this->httpCode === 201 || $this->httpCode === 202) {
             /*
                 Successful Status Codes (2xx).
 

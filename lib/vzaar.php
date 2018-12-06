@@ -25,3 +25,6 @@
     require dirname(__FILE__).'/vzaar/LinkUpload.php';
     require dirname(__FILE__).'/vzaar/Playlist.php';
     require dirname(__FILE__).'/vzaar/PlaylistsList.php';
+    require dirname(__FILE__).'/vzaar/ImageFrame.php';
+    require dirname(__FILE__).'/vzaar/Subtitle.php';
+    require dirname(__FILE__).'/vzaar/SubtitleList.php';

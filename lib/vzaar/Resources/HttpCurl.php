@@ -12,8 +12,8 @@ class HttpCurl implements IHttpChannel
     public static $CURLOPT_VERBOSE = false;
 
     public static $CURLOPT_CAINFO         = false;
-    public static $CURLOPT_SSL_VERIFYPEER = true;
-    public static $CURLOPT_SSL_VERIFYHOST = 2;
+    public static $CURLOPT_SSL_VERIFYPEER = 0;
+    public static $CURLOPT_SSL_VERIFYHOST = 0;
 
     public static $CURLOPT_CONNECTTIMEOUT = false;
 

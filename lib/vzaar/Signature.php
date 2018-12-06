@@ -34,7 +34,7 @@ class Signature extends Record
             $params['uploader'] = Client::UPLOADER.Client::VERSION;
         }
 
-        self::$endpoint = '/signature/single';
+        self::$endpoint = '/signature/single/2';
 
         $this->crudCreate($params);
 
@@ -52,7 +52,7 @@ class Signature extends Record
             $params['uploader'] = Client::UPLOADER.Client::VERSION;
         }
 
-        self::$endpoint = '/signature/multipart';
+        self::$endpoint = '/signature/multipart/2';
 
         $this->crudCreate($params);
 

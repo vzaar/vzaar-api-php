@@ -15,7 +15,7 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
     {
 
         if (isset(static::$recordClass) === false) {
-            throw new VzaarError('Record type have to be configred');
+            throw new VzaarError('Record type have to be configured');
         }
 
         if (class_exists(static::$recordClass) === false) {
@@ -25,7 +25,6 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
         parent::__construct($client);
 
         $this->itemCursor = 0;
-
     }//end __construct()
 
 
@@ -67,13 +66,13 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
     }//end firstPage()
 
 
-    public function nextPage()
+    public function nextPage($path = null)
     {
 
         if (isset($this->next) === true) {
             $url = $this->next;
 
-            $this->getPage($url);
+            $this->getPage($url, $path);
 
             return true;
         } else {
@@ -113,7 +112,7 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
     }//end lastPage()
 
 
-    protected function getPage($url)
+    protected function getPage($url, $path = null)
     {
 
         $queryString = \parse_url($url, PHP_URL_QUERY);
@@ -126,7 +125,7 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
             }
         }
 
-        $this->crudRead(null, $query);
+        $this->crudRead($path, $query);
 
     }//end getPage()
 
@@ -141,18 +140,17 @@ abstract class RecordsList extends Record implements \Iterator, \Countable
 
     }//end paginate()
 
-
-    public static function each_item($params = null, $client = null)
+    public static function each_item($params = null, $client = null, $path = null)
     {
 
-        $list = new static($client);
-        $list->crudRead(null, $params);
+        $list = new static($client, $path);
+        $list->crudRead($path, $params);
 
         do {
             foreach ($list as $key => $value) {
                 yield $value;
             }
-        } while ($list->nextPage() === true);
+        } while ($list->nextPage($path) === true);
 
     }//end each_item()
 
